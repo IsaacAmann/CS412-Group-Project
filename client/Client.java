@@ -6,6 +6,7 @@ import javax.swing.border.*;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.*;
 
 public class Client extends JFrame
 {
@@ -17,7 +18,9 @@ public class Client extends JFrame
 	public static final int GAME_PANEL_WIDTH = 700;
 	
 	public static JPanel rightPanel;
-	public static JPanel gamePanel;
+	public static GamePanel gamePanel;
+	
+	public static Graphics gameGraphics;
 	
 	
 	public Client()
@@ -38,6 +41,9 @@ public class Client extends JFrame
 		this.add(gamePanel);
 		this.add(rightPanel);
 		
+		//Set graphics object for drawing game screen
+		gameGraphics = gamePanel.getGraphics();
+		//gameGraphics.draw(new Rectangle2D.Float(40,40,20,20));
 		
 		this.setVisible(true);	
 	}
@@ -59,7 +65,7 @@ public class Client extends JFrame
 	
 	private void createGamePanel()
 	{
-		gamePanel = new JPanel();
+		gamePanel = new GamePanel();
 		gamePanel.setSize(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT);
 		//gamePanel.setBackground(Color.GREEN);
 		
