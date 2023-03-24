@@ -11,11 +11,11 @@ import java.awt.geom.*;
 public class Client extends JFrame
 {
 	//Constants
-	public static final int WINDOW_WIDTH = 900;
-	public static final int WINDOW_HEIGHT = 650;
+	public static final int WINDOW_WIDTH = 1300;
+	public static final int WINDOW_HEIGHT = 700;
 	
 	public static final int GAME_PANEL_HEIGHT = WINDOW_HEIGHT;
-	public static final int GAME_PANEL_WIDTH = 700;
+	public static final int GAME_PANEL_WIDTH = 1000;
 	
 	public static JPanel rightPanel;
 	public static GamePanel gamePanel;
@@ -65,8 +65,12 @@ public class Client extends JFrame
 	
 	private void createGamePanel()
 	{
+		//Possibly use swing elements as click detectors overlayed on map
+		//use element.setBounds(x,y,width,height) to set position
 		gamePanel = new GamePanel();
 		gamePanel.setSize(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT);
+		
+		gamePanel.setLayout(null);
 		//gamePanel.setBackground(Color.GREEN);
 		
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
