@@ -5,6 +5,8 @@ import java.awt.Color;
 import javax.swing.border.*;
 import java.io.File;
 import java.io.IOException;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,15 +16,22 @@ import java.awt.Image;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
 
+import java.lang.Thread;
+import java.lang.InterruptedException;
+
 
 public class GamePanel extends JPanel
 {
 	//Constants
 	public static final int NUMBER_STATES = 1;
+	public static final int frameWaitTime = 30;
 	
 	public static State[] states = new State[NUMBER_STATES];
 	private static BufferedImage mapImage;
 	private GamePanelMouseListener mouseListener;
+	
+	private Timer gameTimer;
+	
 	
 	public GamePanel()
 	{
@@ -42,6 +51,19 @@ public class GamePanel extends JPanel
 		this.addMouseListener(mouseListener);
 		//Load states
 		loadStates();
+		
+		//Start game loop
+		gameTimer = new Timer(frameWaitTime, new GameLoop());
+		gameTimer.start();
+	}
+	//Game update function, also calls repaint to draw the screen
+	private class GameLoop implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			
+			repaint();
+		}
 	}
 	
 	//Creating state objects
@@ -77,9 +99,8 @@ public class GamePanel extends JPanel
 		{
 			states[i].draw(g2D, this);
 		}
-		
 		Rectangle2D rectangle = new Rectangle2D.Float(40,40,20,20);
 		g2D.draw(rectangle);
-		
 	}
+	
 }

@@ -28,6 +28,23 @@ public class State
 	public void click()
 	{
 		System.out.println(name + " has been clicked on");
+		changeColor(-324234);
+	}
+	
+	//go through each pixel in the image that does not equal 0 (transparent) and modify its color
+	public void changeColor(int newRGB)
+	{
+		for(int i = 0; i < Client.GAME_PANEL_WIDTH; i++)
+		{
+			for(int j = 0; j < Client.GAME_PANEL_HEIGHT; j++)
+			{
+				if(image.getRGB(i,j) != 0)
+				{
+					image.setRGB(i, j, newRGB); 
+					
+				}
+			}
+		}
 	}
 	
 	//Call from paint when the image needs to be drawn, g2D passed from paint, observer should be a reference to the GamePanel object
@@ -35,5 +52,6 @@ public class State
 	{
 		//draw image at 0,0, state images should be the same size as the game window (1000pixels x 700 pixels)
 		g2D.drawImage(image, 0, 0, observer);
+		
 	}
 }
