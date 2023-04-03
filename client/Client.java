@@ -8,6 +8,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
 
+import java.rmi.*;
+import java.rmi.server.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
+
 public class Client extends JFrame
 {
 	//Constants
@@ -22,6 +28,9 @@ public class Client extends JFrame
 	
 	public static Graphics gameGraphics;
 	
+	public static WarRoomServerInterface server;
+	public static String host = "localhost";
+	public static int port = 12345;
 	
 	public Client()
 	{
@@ -45,7 +54,31 @@ public class Client extends JFrame
 		gameGraphics = gamePanel.getGraphics();
 		//gameGraphics.draw(new Rectangle2D.Float(40,40,20,20));
 		
+		initializeRMI();
+		
 		this.setVisible(true);	
+	}
+	
+	private void initializeRMI()
+	{
+		try
+		{
+		Registry registry = LocateRegistry.getRegistry(host,port);
+		server = (WarRoomServerInterface) registry.lookup("WarRoomRMIImplementation");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		try
+		{
+		server.testPrint("Hey");
+		}
+		catch(Exception e)
+		{
+			
+		}
+	
 	}
 	
 	private void createRightPanel()
