@@ -5,6 +5,9 @@ import java.util.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import java.lang.Thread;
+import java.lang.InterruptedException;
+
 public class WarRoomRMIImplementation extends UnicastRemoteObject implements WarRoomServerInterface
 {
 	//Constants
@@ -13,17 +16,44 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	public static final int GAME_RUNNING = 2;
 	public static final int GAME_OVER = 3;
 	
+	public static final int MAX_PLAYERS = 8;
+	
 	
 	public static ArrayList<String> chatMessages = new ArrayList<String>();
+	
 	//Using a hashmap over arraylist so we can easily lookup players by playerID
 	public static HashMap<Integer, Player> players = new HashMap<Integer, Player>();
 	public int serverStatus;
 	
 	//Date formatter for chat messages
 	private DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("H:m:s");
+	
+	private static int playersReady = 0;
+	
 	public WarRoomRMIImplementation() throws RemoteException
 	{
 		serverStatus = WAITING_PLAYERS;
+		
+	}
+	
+	public void startGame()
+	{
+		//Wait for more players to join
+		while(players.size() != MAX_PLAYERS && playersReady != players.size())
+		{
+			try
+			{
+				Thread.sleep(1000);
+				System.out.println("Waiting for players: " + players.size() + " connected");
+			}
+			catch(InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		//change server status and allow turns to be submitted
+		serverStatus = GAME_RUNNING;
 	}
 	
 	//Interface implementations (playerID should be last argument of each one for consistency)
@@ -35,6 +65,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	//Returns an array of new chats for the client. totalChats should be the total chats that the client already has
 	//The client should append this array to their chats on their end to be displayed
+	//Needs to be tested once the chatbox is working client side
 	public String[] getChats(int totalChats) throws RemoteException
 	{
 		//The return array only includes the chats the client has not seen yet
@@ -74,9 +105,22 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			players.put(newPlayer.playerID, newPlayer);
 			output = newPlayer.playerID;	
 		}
+		
+		//start game loop if first player
+		if(players.size() == 1)
+		{
+			startGame();
+		}
 		return output;
 	}
 	
+	public void requestGameStart(int playerID) throws RemoteException
+	{
+		if(serverStatus == WAITING_PLAYERS)
+		{
+			playersReady++;
+		}
+	}
 	
 }
 

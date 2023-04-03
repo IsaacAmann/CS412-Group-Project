@@ -19,4 +19,6 @@ public interface WarRoomServerInterface extends Remote
 	//they were added or indicate why they were not added
 	//Should also have a return value to indicate that the game started
 	public int registerPlayer(String playerName) throws RemoteException;
+	
+	public void requestGameStart(int playerID) throws RemoteException;
 }
