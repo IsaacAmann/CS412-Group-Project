@@ -7,6 +7,5 @@ public class RunClient
 	public static void main(String[] args)
 	{
 		clientFrame = new Client();
-		
 	}
 }

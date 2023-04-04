@@ -23,6 +23,11 @@ public class Client extends JFrame
 	public static final int GAME_PANEL_HEIGHT = WINDOW_HEIGHT;
 	public static final int GAME_PANEL_WIDTH = 1000;
 	
+	//Server statuses
+	public static final int WAITING_PLAYERS = 1;
+	public static final int GAME_RUNNING = 2;
+	public static final int GAME_OVER = 3;
+	
 	public static JPanel rightPanel;
 	public static GamePanel gamePanel;
 	
@@ -32,10 +37,13 @@ public class Client extends JFrame
 	public static String host = "localhost";
 	public static int port = 12345;
 	
+	public static int playerID;
+	
+	
 	public Client()
 	{
 		super("War Room Client");
-		
+
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -46,25 +54,44 @@ public class Client extends JFrame
 		//Create gamePanel
 		createGamePanel();
 		
+		//Add connection window
+		this.add(new ConnectionWindow());
+		
 		//add panels 
 		this.add(gamePanel);
 		this.add(rightPanel);
+		
+		
 		
 		//Set graphics object for drawing game screen
 		gameGraphics = gamePanel.getGraphics();
 		//gameGraphics.draw(new Rectangle2D.Float(40,40,20,20));
 		
-		initializeRMI();
 		
 		this.setVisible(true);	
+		
 	}
 	
-	private void initializeRMI()
+	//register with server
+	//Register with server and wait for game to start
+	public static void registerWithServer(String playerName)
 	{
 		try
 		{
-		Registry registry = LocateRegistry.getRegistry(host,port);
-		server = (WarRoomServerInterface) registry.lookup("WarRoomRMIImplementation");
+			playerID = Client.server.registerPlayer(playerName);
+		}
+		catch(RemoteException exception)
+		{
+			exception.printStackTrace();
+		}
+	}
+	
+	public static void initializeRMI(String address, int port)
+	{
+		try
+		{
+			Registry registry = LocateRegistry.getRegistry(address,port);
+			server = (WarRoomServerInterface) registry.lookup("WarRoomRMIImplementation");
 		}
 		catch(Exception e)
 		{
@@ -72,7 +99,7 @@ public class Client extends JFrame
 		}
 		try
 		{
-		server.testPrint("Hey");
+			server.testPrint("Hey");
 		}
 		catch(Exception e)
 		{

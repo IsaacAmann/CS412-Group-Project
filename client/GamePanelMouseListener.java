@@ -21,7 +21,17 @@ public class GamePanelMouseListener implements MouseListener
 	public void mousePressed(MouseEvent e)
 	{
 		//System.out.println(e.getX() + "  " + e.getY());
-		GamePanel.checkStateMouse(e.getX(), e.getY());
+		//detect a left click
+		if(e.getButton() == MouseEvent.BUTTON1)
+		{
+			GamePanel.checkStateMouse(e.getX(), e.getY());
+		}
+		//detect right click
+		else if(e.getButton() == MouseEvent.BUTTON2)
+		{
+			//Deselect current state
+			GamePanel.selectedState = null;
+		}
 	}
 	
 	public void mouseReleased(MouseEvent e)

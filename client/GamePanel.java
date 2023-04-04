@@ -19,6 +19,11 @@ import javax.imageio.ImageIO;
 import java.lang.Thread;
 import java.lang.InterruptedException;
 
+import java.rmi.*;
+import java.rmi.server.*;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+
 
 public class GamePanel extends JPanel
 {
@@ -32,6 +37,7 @@ public class GamePanel extends JPanel
 	
 	private Timer gameTimer;
 	
+	public static State selectedState;
 	
 	public GamePanel()
 	{
@@ -54,18 +60,17 @@ public class GamePanel extends JPanel
 		
 		//Start game loop
 		gameTimer = new Timer(frameWaitTime, new GameLoop());
-		gameTimer.start();
 	}
 	//Game update function, also calls repaint to draw the screen
 	private class GameLoop implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			
 			repaint();
 		}
 	}
 	
+
 	//Creating state objects
 	private void loadStates()
 	{

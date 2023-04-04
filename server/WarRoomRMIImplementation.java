@@ -23,12 +23,16 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	//Using a hashmap over arraylist so we can easily lookup players by playerID
 	public static HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+	//Maintain an ordered list of playerIDs, the HashMap provides method to return a Set of keys, list may not be ordered though
+	public static ArrayList<Integer> playerIDs = new ArrayList<Integer>();
 	public int serverStatus;
 	
 	//Date formatter for chat messages
 	private DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("H:m:s");
 	
 	private static int playersReady = 0;
+	
+	public static int currentPlayerID;
 	
 	public WarRoomRMIImplementation() throws RemoteException
 	{
@@ -38,22 +42,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	public void startGame()
 	{
-		//Wait for more players to join
-		while(players.size() != MAX_PLAYERS && playersReady != players.size())
-		{
-			try
-			{
-				Thread.sleep(1000);
-				System.out.println("Waiting for players: " + players.size() + " connected");
-			}
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		
 		//change server status and allow turns to be submitted
 		serverStatus = GAME_RUNNING;
+		//get the first player's ID to allow them to submit a turn
+		currentPlayerID = playerIDs.get(0);
 	}
 	
 	//Interface implementations (playerID should be last argument of each one for consistency)
@@ -103,14 +95,16 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		{
 			Player newPlayer = new Player(playerName);
 			players.put(newPlayer.playerID, newPlayer);
-			output = newPlayer.playerID;	
+			output = newPlayer.playerID;
+			playerIDs.add(output);	
+			//start game loop if max players has been reached
+			if(players.size() == MAX_PLAYERS)
+			{
+				startGame();
+			}
+			System.out.println("Player joined: " + playerName + " ID: " + newPlayer.playerID);
 		}
 		
-		//start game loop if first player
-		if(players.size() == 1)
-		{
-			startGame();
-		}
 		return output;
 	}
 	
@@ -119,6 +113,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		if(serverStatus == WAITING_PLAYERS)
 		{
 			playersReady++;
+			if(playersReady == players.size())
+			{
+				serverStatus = GAME_RUNNING;
+			}
 		}
 	}
 	

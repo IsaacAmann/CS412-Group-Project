@@ -10,10 +10,13 @@ public class State
 {
 	public String name;
 	public BufferedImage image;
+	public int ownerPlayerID;
 	
 	public State(String name, String imagePath)
 	{
 		this.name = name;
+		//start as neutral
+		ownerPlayerID = -1;
 		try
 		{
 			image = ImageIO.read(new File(imagePath));
@@ -28,7 +31,11 @@ public class State
 	public void click()
 	{
 		System.out.println(name + " has been clicked on");
-		changeColor(-324234);
+		//changeColor(-324234);
+		if(ownerPlayerID == Client.playerID)
+		{
+			GamePanel.selectedState = this;
+		}
 	}
 	
 	//go through each pixel in the image that does not equal 0 (transparent) and modify its color
