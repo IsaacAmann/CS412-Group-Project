@@ -40,6 +40,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		
 	}
 	
+	//Change the server status and allow the first player to submit a turn
 	public void startGame()
 	{
 		//change server status and allow turns to be submitted
@@ -70,23 +71,28 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		return null;
 	}
 	
+	//Allow client to post their turn to the server, should update gamestate and set currentPlayerID to the next player
 	public void postTurn(GameStateUpdate update, int playerID) throws RemoteException
 	{
 		
 	}
 	
+	//Should include updated map information if the player has submitted a turn
+	//The client should keep note of the current player locally, if it is different, they should merge the GameStateUpdate
+	//With their copy of the gameState
 	public GameStateUpdate getGameState() throws RemoteException
 	{
 		
 		return null;
 	}
 	
+	//RMI method for testing the server connection
 	public void testPrint(String message) throws RemoteException
 	{	
 		System.out.println(message);
 	}
 	
-	//Returns the playerID if the player registered sucessfuly, returns current server status otherwise
+	//Returns the playerID if the player registered sucessfuly, returns current server status otherwise indicating the game is already runnning
 	public int registerPlayer(String playerName) throws RemoteException
 	{
 		int output = this.serverStatus;
@@ -108,6 +114,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		return output;
 	}
 	
+	//Allow clients to signal the server to  start the game early instead of waiting for a full server
 	public void requestGameStart(int playerID) throws RemoteException
 	{
 		if(serverStatus == WAITING_PLAYERS)

@@ -86,6 +86,7 @@ public class Client extends JFrame
 		}
 	}
 	
+	//Attempt to connect to the server 
 	public static void initializeRMI(String address, int port)
 	{
 		try
@@ -125,17 +126,15 @@ public class Client extends JFrame
 	
 	private void createGamePanel()
 	{
-		//Possibly use swing elements as click detectors overlayed on map
-		//use element.setBounds(x,y,width,height) to set position
 		gamePanel = new GamePanel();
 		gamePanel.setSize(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT);
 		
 		gamePanel.setLayout(null);
-		//gamePanel.setBackground(Color.GREEN);
 		
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
 		gamePanel.setBorder(border);
 		
 		gamePanel.setVisible(true);
 	}
+	
 }
