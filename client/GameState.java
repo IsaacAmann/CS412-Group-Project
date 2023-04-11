@@ -51,8 +51,7 @@ public class GameState
 					sourceState.numberUnits -= currentMove.units;
 					destinationState.numberUnits -= currentMove.units;
 				}
-			}
-			
+			}	
 		}
 	}
 	

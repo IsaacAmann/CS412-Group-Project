@@ -29,11 +29,17 @@ public class GamePanel extends JPanel
 {
 	//Constants
 	public static final int NUMBER_STATES = 1;
-	public static final int frameWaitTime = 30;
+	//Amount of time the game waits to check the gamestate again, should be a large amount of time so the server
+	//is not overwhelmed
+	public static final int frameWaitTime = 3000;
 	
 	public static State[] states = new State[NUMBER_STATES];
 	private static BufferedImage mapImage;
 	private GamePanelMouseListener mouseListener;
+	
+	//Game logic stuff
+	//Clients copy of the game state, should be replaced with the server's version after requesting it 
+	public GameState gameState;
 	
 	private Timer gameTimer;
 	
@@ -61,11 +67,26 @@ public class GamePanel extends JPanel
 		//Start game loop
 		gameTimer = new Timer(frameWaitTime, new GameLoop());
 	}
+	
+	//Start game timer, should be called after connecting to the server
+	public void startGame()
+	{
+		gameState = new GameState();
+		gameTimer.start();
+	}
 	//Game update function, also calls repaint to draw the screen
 	private class GameLoop implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			try
+			{
+				gameState = Client.server.getGameState();
+			}
+			catch(RemoteException exception)
+			{
+				exception.printStackTrace();
+			}
 			repaint();
 		}
 	}
