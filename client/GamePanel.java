@@ -74,7 +74,7 @@ public class GamePanel extends JPanel
 	//Creating state objects
 	private void loadStates()
 	{
-		states[0] = new State("Test State", "assets/testState.png");
+		states[0] = new State("Test State", "assets/testState.png", 0);
 	}
 	//Go through each state image and see if the color is anything other than transparent
 	//If it is, this indicates that state was clicked on

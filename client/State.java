@@ -11,12 +11,15 @@ public class State
 	public String name;
 	public BufferedImage image;
 	public int ownerPlayerID;
+	//Used to lookup StateData within the hashmap inside of the GameState class
+	public int stateID;
 	
-	public State(String name, String imagePath)
+	public State(String name, String imagePath, int stateID)
 	{
 		this.name = name;
 		//start as neutral
 		ownerPlayerID = -1;
+		this.stateID = stateID;
 		try
 		{
 			image = ImageIO.read(new File(imagePath));
