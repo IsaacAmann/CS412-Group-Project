@@ -158,7 +158,7 @@ public class GamePanel extends JPanel
 					Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: " + states[i].name);
 				}
 				//Select second state to receive unit movement
-				else if(selectedState2 == null)
+				else if(selectedState2 == null && selectedState != null)
 				{
 					selectedState2 = states[i];
 					Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: " + states[i].name);
