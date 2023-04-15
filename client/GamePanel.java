@@ -32,6 +32,10 @@ public class GamePanel extends JPanel
 	//Amount of time the game waits to check the gamestate again, should be a large amount of time so the server
 	//is not overwhelmed
 	public static final int frameWaitTime = 3000;
+	//Server states
+	public static final int WAITING_PLAYERS = 1;
+	public static final int GAME_RUNNING = 2;
+	public static final int GAME_OVER = 3;
 	
 	public static State[] states = new State[NUMBER_STATES];
 	private static BufferedImage mapImage;
@@ -40,6 +44,8 @@ public class GamePanel extends JPanel
 	//Game logic stuff
 	//Clients copy of the game state, should be replaced with the server's version after requesting it 
 	public GameState gameState;
+	private GameStateUpdate currentGameStateUpdate;
+	public int currentServerState;
 	
 	private Timer gameTimer;
 	
@@ -71,7 +77,16 @@ public class GamePanel extends JPanel
 	//Start game timer, should be called after connecting to the server
 	public void startGame()
 	{
-		gameState = new GameState();
+		//get initial server status
+		try
+		{
+			currentServerState = Client.server.getServerState();
+		}
+		catch(RemoteException exception)
+		{
+			exception.printStackTrace();
+		}
+		
 		gameTimer.start();
 	}
 	//Game update function, also calls repaint to draw the screen
@@ -81,17 +96,43 @@ public class GamePanel extends JPanel
 		{
 			try
 			{
-				gameState = Client.server.getGameState();
+				currentServerState = Client.server.getServerState();
+				System.out.println("Server state: " + currentServerState);
 			}
 			catch(RemoteException exception)
 			{
 				exception.printStackTrace();
 			}
+			//Request GameStateUpdate from server if the game has started
+			if(currentServerState == GAME_RUNNING)
+			{
+				try
+				{
+					gameState = Client.server.getGameState();
+				}
+				catch(RemoteException exception)
+				{
+					exception.printStackTrace();
+				}
+				//Process players turn
+				if(gameState.currentPlayerID == Client.playerID)
+				{
+					//Turn not started yet
+					if(currentGameStateUpdate == null)
+					{
+						currentGameStateUpdate = new GameStateUpdate();
+						currentGameStateUpdate.playerID = Client.playerID;
+					}
+					else
+					{
+						
+					}
+				}
+			}
+			
 			repaint();
 		}
 	}
-	
-
 	//Creating state objects
 	private void loadStates()
 	{

@@ -127,5 +127,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		}
 	}
 	
+	public int getServerState()
+	{
+		return this.serverStatus;
+	}
+	
 }
 

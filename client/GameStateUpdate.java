@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class GameStateUpdate implements Serializable
 {
-	public int currentPlayer;
+	public int playerID;
 	//Should include the moves made by a player during their turn client side, should be 
 	public ArrayList<UnitMove> moveList;
 	
@@ -11,7 +11,6 @@ public class GameStateUpdate implements Serializable
 	{
 		moveList = new ArrayList<UnitMove>();
 	}
-	
 	
 	public class UnitMove
 	{

@@ -4,7 +4,7 @@ import java.util.HashMap;
 public class GameState
 {
 	//ID of the player who's turn it is
-	private int currentPlayerID;
+	public int currentPlayerID;
 	
 	private HashMap<Integer, StateData> states;
 	

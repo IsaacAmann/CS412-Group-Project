@@ -21,4 +21,6 @@ public interface WarRoomServerInterface extends Remote
 	public int registerPlayer(String playerName) throws RemoteException;
 	
 	public void requestGameStart(int playerID) throws RemoteException;
+	
+	public int getServerState() throws RemoteException;
 }
