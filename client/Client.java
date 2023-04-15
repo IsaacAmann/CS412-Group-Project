@@ -31,6 +31,7 @@ public class Client extends JFrame
 	
 	public static JPanel rightPanel;
 	public static GamePanel gamePanel;
+	public static StateSelectionPanel stateSelectionPanel;
 	
 	public static Graphics gameGraphics;
 	
@@ -114,6 +115,7 @@ public class Client extends JFrame
 	{
 		
 		rightPanel = new JPanel();
+		stateSelectionPanel = new StateSelectionPanel();
 		
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		//rightPanel.setLayout(null);
@@ -123,7 +125,7 @@ public class Client extends JFrame
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
 		rightPanel.setBorder(border);
 		
-		rightPanel.add(new StateSelectionPanel());
+		rightPanel.add(stateSelectionPanel);
 		
 		//rightPanel.setVisible(true);
 		

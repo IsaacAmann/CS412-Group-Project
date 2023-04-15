@@ -50,6 +50,7 @@ public class GamePanel extends JPanel
 	private Timer gameTimer;
 	
 	public static State selectedState;
+	public static State selectedState2;
 	
 	public GamePanel()
 	{
@@ -129,7 +130,6 @@ public class GamePanel extends JPanel
 					}
 				}
 			}
-			
 			repaint();
 		}
 	}
@@ -149,7 +149,21 @@ public class GamePanel extends JPanel
 			//System.out.println("RGB " + i + " " + currentRGB);
 			//RGB of 0 indicates the pixel is transparent
 			if(currentRGB != 0)
+			{
 				states[i].click();
+				//allow player to select friendly state
+				if(selectedState == null && states[i].ownerPlayerID == Client.playerID)
+				{
+					selectedState = states[i];
+					Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: " + states[i].name);
+				}
+				//Select second state to receive unit movement
+				else if(selectedState2 == null)
+				{
+					selectedState2 = states[i];
+					Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: " + states[i].name);
+				}
+			}
 		}
 	}
 	
