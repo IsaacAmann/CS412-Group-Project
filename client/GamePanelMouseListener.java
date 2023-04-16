@@ -29,8 +29,13 @@ public class GamePanelMouseListener implements MouseListener
 		//detect right click
 		else if(e.getButton() == MouseEvent.BUTTON2)
 		{
-			//Deselect current state
+			//Deselect current states
 			GamePanel.selectedState = null;
+			GamePanel.selectedState2 = null;
+			
+			//update StateSelectionPanel labels
+			Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: ");
+			Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: ");
 		}
 	}
 	

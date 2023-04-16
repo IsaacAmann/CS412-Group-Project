@@ -80,9 +80,9 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	//Should include updated map information if the player has submitted a turn
 	//The client should keep note of the current player locally, if it is different, they should merge the GameStateUpdate
 	//With their copy of the gameState
-	public GameStateUpdate getGameState() throws RemoteException
+	public GameState getGameState() throws RemoteException
 	{
-		
+		System.out.println("Sent gameState");
 		return null;
 	}
 	
@@ -125,6 +125,11 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 				serverStatus = GAME_RUNNING;
 			}
 		}
+	}
+	
+	public int getServerState()
+	{
+		return this.serverStatus;
 	}
 	
 }

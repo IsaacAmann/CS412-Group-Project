@@ -76,6 +76,8 @@ public class ConnectionWindow extends JInternalFrame
 			Client.initializeRMI(serverAddress.getText(), Integer.parseInt(serverPort.getText()));
 			Client.registerWithServer(playerName.getText());
 			
+			//Begin game loop in gamePanel
+			Client.gamePanel.startGame();
 			//Close the JInternalFrame
 			getConnectionWindow().setVisible(false);
 		}

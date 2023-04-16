@@ -1,6 +1,7 @@
 import javax.swing.JFrame;
 import javax.swing.*;
 import javax.swing.BoxLayout;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.border.*;
 
@@ -30,6 +31,7 @@ public class Client extends JFrame
 	
 	public static JPanel rightPanel;
 	public static GamePanel gamePanel;
+	public static StateSelectionPanel stateSelectionPanel;
 	
 	public static Graphics gameGraphics;
 	
@@ -48,6 +50,8 @@ public class Client extends JFrame
 		
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		
+		//this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
+		//this.getContentPane().setLayout(null);
 		//Create rightPanel
 		createRightPanel();
 		
@@ -58,18 +62,16 @@ public class Client extends JFrame
 		this.add(new ConnectionWindow());
 		
 		//add panels 
-		this.add(gamePanel);
-		this.add(rightPanel);
-		
+		this.add(gamePanel, BorderLayout.CENTER);
+		this.add(rightPanel, BorderLayout.LINE_END);
 		
 		
 		//Set graphics object for drawing game screen
 		gameGraphics = gamePanel.getGraphics();
 		//gameGraphics.draw(new Rectangle2D.Float(40,40,20,20));
 		
-		
-		this.setVisible(true);	
-		
+		//this.pack();
+		this.setVisible(true);
 	}
 	
 	//register with server
@@ -111,16 +113,24 @@ public class Client extends JFrame
 	
 	private void createRightPanel()
 	{
+		
 		rightPanel = new JPanel();
+		stateSelectionPanel = new StateSelectionPanel();
 		
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-		
+		//rightPanel.setLayout(null);
 		rightPanel.setBackground(Color.RED);
 		//rightPanel.setSize(RIGHT_PANEL_WIDTH, RIGHT_PANEL_HEIGHT);
 		
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
 		rightPanel.setBorder(border);
 		
+		rightPanel.add(stateSelectionPanel);
+		
+		//rightPanel.setVisible(true);
+		
+		
+		//rightPanel = new StateSelectionPanel();
 		rightPanel.setVisible(true);
 	}
 	

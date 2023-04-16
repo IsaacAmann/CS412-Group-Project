@@ -11,7 +11,7 @@ public interface WarRoomServerInterface extends Remote
 	public void postTurn(GameStateUpdate update, int playerID) throws RemoteException;
 	
 	//Return the current game state, should be called by the client every couple seconds (unless it is already their turn
-	public GameStateUpdate getGameState() throws RemoteException;
+	public GameState getGameState() throws RemoteException;
 	
 	public void testPrint(String message) throws RemoteException;
 	
@@ -21,4 +21,6 @@ public interface WarRoomServerInterface extends Remote
 	public int registerPlayer(String playerName) throws RemoteException;
 	
 	public void requestGameStart(int playerID) throws RemoteException;
+	
+	public int getServerState() throws RemoteException;
 }
