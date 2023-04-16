@@ -13,6 +13,7 @@ public class State
 	public int ownerPlayerID;
 	//Used to lookup StateData within the hashmap inside of the GameState class
 	public int stateID;
+	public int currentColor;
 	
 	public State(String name, String imagePath, int stateID)
 	{
@@ -20,6 +21,9 @@ public class State
 		//start as neutral
 		ownerPlayerID = -1;
 		this.stateID = stateID;
+		//Default color value, States should initally draw as the color the png is, 
+		//Leaving this null may cause an issue in the comparison in the changeColor method
+		this.currentColor = 0;
 		try
 		{
 			image = ImageIO.read(new File(imagePath));
@@ -44,14 +48,17 @@ public class State
 	//go through each pixel in the image that does not equal 0 (transparent) and modify its color
 	public void changeColor(int newRGB)
 	{
-		for(int i = 0; i < Client.GAME_PANEL_WIDTH; i++)
+		if(newRGB != currentColor)
 		{
-			for(int j = 0; j < Client.GAME_PANEL_HEIGHT; j++)
+			currentColor = newRGB;
+			for(int i = 0; i < Client.GAME_PANEL_WIDTH; i++)
 			{
-				if(image.getRGB(i,j) != 0)
+				for(int j = 0; j < Client.GAME_PANEL_HEIGHT; j++)
 				{
-					image.setRGB(i, j, newRGB); 
-					
+					if(image.getRGB(i,j) != 0)
+					{
+						image.setRGB(i, j, newRGB); 
+					}
 				}
 			}
 		}

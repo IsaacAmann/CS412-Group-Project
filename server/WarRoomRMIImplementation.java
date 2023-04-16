@@ -8,6 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.lang.Thread;
 import java.lang.InterruptedException;
 
+import java.awt.Color;
+
 public class WarRoomRMIImplementation extends UnicastRemoteObject implements WarRoomServerInterface
 {
 	//Constants
@@ -16,15 +18,20 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	public static final int GAME_RUNNING = 2;
 	public static final int GAME_OVER = 3;
 	
-	public static final int MAX_PLAYERS = 8;
+	public static final int MAX_PLAYERS = 2;
 	
+	//Random generator for the player colors
+	private Random colorGenerator;
 	
 	public static ArrayList<String> chatMessages = new ArrayList<String>();
 	
 	//Using a hashmap over arraylist so we can easily lookup players by playerID
 	public static HashMap<Integer, Player> players = new HashMap<Integer, Player>();
+	//HashMap to store player colors to be passed to the client, the key should be by playerID
+	public static HashMap<Integer, Integer> playerColors = new HashMap<Integer, Integer>();
 	//Maintain an ordered list of playerIDs, the HashMap provides method to return a Set of keys, list may not be ordered though
 	public static ArrayList<Integer> playerIDs = new ArrayList<Integer>();
+	
 	public int serverStatus;
 	
 	//Date formatter for chat messages
@@ -34,19 +41,28 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	public static int currentPlayerID;
 	
+	//Server's copy of the game state
+	public static GameState currentGameState;
+	
 	public WarRoomRMIImplementation() throws RemoteException
 	{
 		serverStatus = WAITING_PLAYERS;
+		colorGenerator = new Random();
 		
 	}
 	
 	//Change the server status and allow the first player to submit a turn
 	public void startGame()
 	{
-		//change server status and allow turns to be submitted
-		serverStatus = GAME_RUNNING;
+		
 		//get the first player's ID to allow them to submit a turn
 		currentPlayerID = playerIDs.get(0);
+		//Generate GameState
+		currentGameState = new GameState(playerColors);
+		//Assign starting territories
+		
+		//change server status and allow turns to be submitted
+		serverStatus = GAME_RUNNING;
 	}
 	
 	//Interface implementations (playerID should be last argument of each one for consistency)
@@ -74,7 +90,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	//Allow client to post their turn to the server, should update gamestate and set currentPlayerID to the next player
 	public void postTurn(GameStateUpdate update, int playerID) throws RemoteException
 	{
-		
+		if(playerID == currentGameState.currentPlayerID)
+		{
+			currentGameState.mergeGameStateUpdate(update);
+		}
 	}
 	
 	//Should include updated map information if the player has submitted a turn
@@ -99,8 +118,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		//allow players to join if in the waiting for players state
 		if(serverStatus == WAITING_PLAYERS)
 		{
-			Player newPlayer = new Player(playerName);
+			Color color = new Color(colorGenerator.nextFloat(), colorGenerator.nextFloat(), colorGenerator.nextFloat());
+			Player newPlayer = new Player(playerName, color.hashCode());
 			players.put(newPlayer.playerID, newPlayer);
+			playerColors.put(newPlayer.playerID, newPlayer.playerColor);
 			output = newPlayer.playerID;
 			playerIDs.add(output);	
 			//start game loop if max players has been reached

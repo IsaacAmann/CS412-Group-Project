@@ -7,10 +7,12 @@ public class GameState
 	public int currentPlayerID;
 	
 	private HashMap<Integer, StateData> states;
+	private HashMap<Integer, Integer> playerColors;
 	
-	public GameState()
+	public GameState(HashMap<Integer, Integer> playerColors)
 	{
 		states = new HashMap<Integer, StateData>();
+		this.playerColors = playerColors;
 	}
 	
 	public void mergeGameStateUpdate(GameStateUpdate update)
@@ -33,6 +35,7 @@ public class GameState
 				sourceState.numberUnits -= currentMove.units;
 				destinationState.numberUnits += currentMove.units;
 				destinationState.ownerPlayerID = currentMove.senderPlayerID;
+				destinationState.color = playerColors.get(currentMove.senderPlayerID);
 			}
 			//Unit movement to enemy state, subtract the units sent from the enemy states units then flip the state
 			//if the units fall below 0 
@@ -64,7 +67,6 @@ public class GameState
 		public int stateID;
 		//Number of units present in the territory
 		public int numberUnits;
-		
-		
+		public int color;
 	}
 }
