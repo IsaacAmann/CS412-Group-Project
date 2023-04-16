@@ -42,6 +42,18 @@ public class StateSelectionPanel extends JPanel
 		this.add(submitTurnButton);
 		this.setVisible(true);
 	}
+	//Update information in the panel when the selected state changes
+	public void setSelectedState(State state)
+	{
+		selectedStateName.setText(state.name);
+		unitSlider.setMaximum(state.units);
+		unitSlider.setMajorTickSpacing(state.units / 10);
+	}
+	//Update information in the panel when the target state changes
+	public void setSelectedState2(State state)
+	{
+		selectedState2Name.setText(state.name);
+	}
 	
 	//Action listener for the submit turn button
 	private class SubmitListener implements ActionListener

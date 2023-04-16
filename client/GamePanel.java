@@ -96,6 +96,7 @@ public class GamePanel extends JPanel
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			
 			try
 			{
 				currentServerState = Client.server.getServerState();
@@ -113,16 +114,21 @@ public class GamePanel extends JPanel
 			//Request GameStateUpdate from server if the game has started
 			else if(currentServerState == GAME_RUNNING)
 			{
-				try
+				//Needs to check if the player is in the middle of their turn, will overwrite their altered game state
+				//without this check
+				if(gameState == null || gameState.currentPlayerID != Client.playerID)
 				{
-					gameState = Client.server.getGameState();
-				}
-				catch(RemoteException exception)
-				{
-					exception.printStackTrace();
+					try
+					{
+						gameState = Client.server.getGameState();
+					}
+					catch(RemoteException exception)
+					{
+						exception.printStackTrace();
+					}
 				}
 				//Process players turn
-				if(gameState.currentPlayerID == Client.playerID)
+				if(gameState != null && gameState.currentPlayerID == Client.playerID)
 				{
 					//Turn not started yet
 					if(currentGameStateUpdate == null)
@@ -136,7 +142,17 @@ public class GamePanel extends JPanel
 					}
 				}
 				//Update States with information from GameState received from server
-				
+				if(gameState != null)
+				{
+					for(int i = 0;i < states.length; i++)
+					{
+						GameState.StateData currentStateData = gameState.states.get(i);
+						states[i].units = currentStateData.numberUnits;
+						states[i].changeColor(currentStateData.color);
+						states[i].ownerPlayerID = currentStateData.ownerPlayerID;
+						
+					}
+				}
 			}
 			//Handle end game stuff and clean up
 			else if(currentServerState == GAME_OVER)
@@ -251,13 +267,15 @@ public class GamePanel extends JPanel
 				if(selectedState == null && states[i].ownerPlayerID == Client.playerID)
 				{
 					selectedState = states[i];
-					Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: " + states[i].name);
+					//Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: " + states[i].name);
+					Client.stateSelectionPanel.setSelectedState(states[i]);
 				}
 				//Select second state to receive unit movement
 				else if(selectedState2 == null && selectedState != null)
 				{
 					selectedState2 = states[i];
-					Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: " + states[i].name);
+					//Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: " + states[i].name);
+					Client.stateSelectionPanel.setSelectedState2(states[i]);
 				}
 			}
 		}

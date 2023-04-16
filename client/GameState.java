@@ -6,7 +6,7 @@ public class GameState
 	//ID of the player who's turn it is
 	public int currentPlayerID;
 	
-	private HashMap<Integer, StateData> states;
+	public HashMap<Integer, StateData> states;
 	private HashMap<Integer, Integer> playerColors;
 	
 	public GameState(HashMap<Integer, Integer> playerColors)
