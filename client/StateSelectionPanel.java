@@ -17,6 +17,7 @@ public class StateSelectionPanel extends JPanel
 	JLabel selectedStateName;
 	JLabel selectedState2Name;
 	JButton submitTurnButton;
+	JButton moveUnitsButton;
 	//Use JSlider for selecting units to move
 	JSlider unitSlider;
 	
@@ -29,18 +30,29 @@ public class StateSelectionPanel extends JPanel
 		
 		selectedStateName = new JLabel("Selected State: ");
 		submitTurnButton = new JButton("End Turn");
+		moveUnitsButton = new JButton("Move Units");
 		selectedState2Name = new JLabel("Target State: ");
 		submitTurnButton.addActionListener(new SubmitListener());
+		moveUnitsButton.addActionListener(new MoveListener());
 		unitSlider = new JSlider(0, 10, 0);
 		this.add(selectedStateName);
 		this.add(selectedState2Name);
 		this.add(unitSlider);
+		this.add(moveUnitsButton);
 		this.add(submitTurnButton);
 		this.setVisible(true);
 	}
 	
 	//Action listener for the submit turn button
 	private class SubmitListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			
+		}
+	}
+	
+	private class MoveListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{

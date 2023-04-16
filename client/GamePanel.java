@@ -105,8 +105,13 @@ public class GamePanel extends JPanel
 			{
 				exception.printStackTrace();
 			}
+			//Tasks to run while waiting for players
+			if(currentServerState == WAITING_PLAYERS)
+			{
+				System.out.println("Waiting for players");
+			}
 			//Request GameStateUpdate from server if the game has started
-			if(currentServerState == GAME_RUNNING)
+			else if(currentServerState == GAME_RUNNING)
 			{
 				try
 				{
@@ -131,6 +136,11 @@ public class GamePanel extends JPanel
 					}
 				}
 				//Update States with information from GameState received from server
+				
+			}
+			//Handle end game stuff and clean up
+			else if(currentServerState == GAME_OVER)
+			{
 				
 			}
 			repaint();
