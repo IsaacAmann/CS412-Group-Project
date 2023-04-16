@@ -1,3 +1,5 @@
+package client;
+
 import java.awt.Image;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
@@ -34,10 +36,11 @@ public class State
 	public void click()
 	{
 		System.out.println(name + " has been clicked on");
-		//changeColor(-324234);
+
 		if(ownerPlayerID == Client.playerID)
 		{
 			GamePanel.selectedState = this;
+			changeColor(-324234);
 		}
 	}
 	
@@ -50,8 +53,7 @@ public class State
 			{
 				if(image.getRGB(i,j) != 0)
 				{
-					image.setRGB(i, j, newRGB); 
-					
+					image.setRGB(i, j, newRGB);
 				}
 			}
 		}

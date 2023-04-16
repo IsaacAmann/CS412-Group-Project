@@ -1,3 +1,5 @@
+package client;
+
 import javax.swing.JFrame;
 import javax.swing.*;
 import javax.swing.BoxLayout;
@@ -13,7 +15,6 @@ import java.rmi.*;
 import java.rmi.server.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-
 
 public class Client extends JFrame
 {
@@ -59,7 +60,7 @@ public class Client extends JFrame
 		createGamePanel();
 		
 		//Add connection window
-		this.add(new ConnectionWindow());
+		//this.add(new ConnectionWindow());
 		
 		//add panels 
 		this.add(gamePanel, BorderLayout.CENTER);
@@ -115,11 +116,12 @@ public class Client extends JFrame
 	{
 		
 		rightPanel = new JPanel();
+		rightPanel.setBackground(Color.DARK_GRAY);
 		stateSelectionPanel = new StateSelectionPanel();
 		
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		//rightPanel.setLayout(null);
-		rightPanel.setBackground(Color.RED);
+		rightPanel.setBackground(Color.BLACK);
 		//rightPanel.setSize(RIGHT_PANEL_WIDTH, RIGHT_PANEL_HEIGHT);
 		
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
