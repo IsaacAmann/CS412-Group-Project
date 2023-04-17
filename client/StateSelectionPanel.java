@@ -36,6 +36,8 @@ public class StateSelectionPanel extends JPanel
 		submitTurnButton.addActionListener(new SubmitListener());
 		moveUnitsButton.addActionListener(new MoveListener());
 		unitSlider = new JSlider(0, 10, 0);
+		unitSlider.setPaintTicks(true);
+		unitSlider.setPaintLabels(true);
 		this.add(selectedStateName);
 		this.add(selectedState2Name);
 		this.add(unitSlider);
@@ -48,7 +50,8 @@ public class StateSelectionPanel extends JPanel
 	{
 		selectedStateName.setText("Selected State: " + state.name);
 		unitSlider.setMaximum(state.units);
-		unitSlider.setMajorTickSpacing(state.units / 10);
+		unitSlider.setMajorTickSpacing(state.units / 2);
+		
 	}
 	//Update information in the panel when the target state changes
 	public void setSelectedState2(State state)
@@ -91,7 +94,21 @@ public class StateSelectionPanel extends JPanel
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			
+			if(GamePanel.selectedState != null && GamePanel.selectedState2 != null)
+			{
+				int sourceStateID = GamePanel.selectedState.stateID;
+				int destinationStateID = GamePanel.selectedState2.stateID;
+				int senderPlayerID = Client.playerID;
+				int units = unitSlider.getValue();
+				
+				//Creating a local game state update to merge a move in real time as they are made client side
+				GameStateUpdate tempUpdate = new GameStateUpdate();
+				tempUpdate.addMove(units, sourceStateID, destinationStateID, senderPlayerID);
+				GamePanel.gameState.mergeGameStateUpdate(tempUpdate);
+				
+				GamePanel.currentGameStateUpdate.addMove(units, sourceStateID, destinationStateID, senderPlayerID);
+				
+			}
 		}
 	}
 	

@@ -34,8 +34,9 @@ public class GamePanelMouseListener implements MouseListener
 			GamePanel.selectedState2 = null;
 			System.out.println("right");
 			//update StateSelectionPanel labels
-			Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: ");
-			Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: ");
+			Client.stateSelectionPanel.deselect();
+			//Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: ");
+			//Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: ");
 		}
 	}
 	
