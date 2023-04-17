@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Color;
 
 public class State
 {
@@ -59,7 +60,9 @@ public class State
 				{
 					if(image.getRGB(i,j) != 0)
 					{
-						image.setRGB(i, j, newRGB); 
+						//Preserve the black border around the state
+						if(image.getRGB(i,j) != Color.BLACK.hashCode())
+							image.setRGB(i, j, newRGB); 
 					}
 				}
 			}

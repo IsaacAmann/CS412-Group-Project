@@ -1,6 +1,6 @@
 import java.util.HashMap;
 import java.io.Serializable;
-
+import java.awt.Color;
 
 public class GameState implements Serializable
 {
@@ -20,7 +20,8 @@ public class GameState implements Serializable
 		//Create StateData objects with base values
 		for(int i = 0; i < NUMBER_STATES; i++)
 		{
-			 states.put(i, new StateData(-1, i, 0, 1)); 
+			//Create states with default values
+			states.put(i, new StateData(-1, i, 0, Color.WHITE.hashCode())); 
 		}
 	}
 	

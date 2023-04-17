@@ -18,7 +18,19 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	public static final int GAME_RUNNING = 2;
 	public static final int GAME_OVER = 3;
 	
+	public static final int STARTING_UNITS = 20;
 	public static final int MAX_PLAYERS = 2;
+	public static final int[] STARTING_LOCATIONS=
+	{
+		8, //Alabama
+		39, //California
+		25, //North Dakota
+		30, //Texas
+		6, // North Carolina
+		32, //Colorado
+		36, //Utah
+		9 //Florida
+	};
 	
 	//Random generator for the player colors
 	private Random colorGenerator;
@@ -63,7 +75,12 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		currentGameState = new GameState(playerColors);
 		currentGameState.currentPlayerID = currentPlayerID;
 		//Assign starting territories
-		
+		for(int i = 0; i < playerIDs.size(); i++)
+		{
+			currentGameState.states.get(STARTING_LOCATIONS[i]).ownerPlayerID = playerIDs.get(i);
+			currentGameState.states.get(STARTING_LOCATIONS[i]).numberUnits = STARTING_UNITS;
+			currentGameState.states.get(STARTING_LOCATIONS[i]).color = playerColors.get(playerIDs.get(i));
+		}
 		//change server status and allow turns to be submitted
 		serverStatus = GAME_RUNNING;
 	}
