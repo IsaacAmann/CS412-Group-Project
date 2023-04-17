@@ -69,6 +69,8 @@ public class GamePanel extends JPanel
 		//Other inputs from the sidebar should be handled separately
 		mouseListener = new GamePanelMouseListener();
 		this.addMouseListener(mouseListener);
+		selectedState = null;
+		selectedState2 = null;
 		//Load states
 		loadStates();
 		
@@ -272,11 +274,12 @@ public class GamePanel extends JPanel
 				if(selectedState == null && states[i].ownerPlayerID == Client.playerID)
 				{
 					selectedState = states[i];
+					System.out.println("SELECTED" + selectedState);
 					//Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: " + states[i].name);
 					Client.stateSelectionPanel.setSelectedState(states[i]);
 				}
 				//Select second state to receive unit movement
-				else if(selectedState2 == null && selectedState != null)
+				else if(selectedState != null && states[i] != selectedState)
 				{
 					selectedState2 = states[i];
 					//Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: " + states[i].name);

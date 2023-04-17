@@ -45,14 +45,20 @@ public class StateSelectionPanel extends JPanel
 	//Update information in the panel when the selected state changes
 	public void setSelectedState(State state)
 	{
-		selectedStateName.setText(state.name);
+		selectedStateName.setText("Selected State: " + state.name);
 		unitSlider.setMaximum(state.units);
 		unitSlider.setMajorTickSpacing(state.units / 10);
 	}
 	//Update information in the panel when the target state changes
 	public void setSelectedState2(State state)
 	{
-		selectedState2Name.setText(state.name);
+		selectedState2Name.setText("Target State: " + state.name);
+	}
+	
+	public void deselect()
+	{
+		selectedStateName.setText("Selected State: ");
+		selectedState2Name.setText("Target State: ");
 	}
 	
 	//Action listener for the submit turn button

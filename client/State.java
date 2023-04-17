@@ -42,10 +42,12 @@ public class State
 	{
 		System.out.println(name + " has been clicked on");
 		//changeColor(-324234);
+		/*
 		if(ownerPlayerID == Client.playerID)
 		{
 			GamePanel.selectedState = this;
 		}
+		*/
 	}
 	
 	//go through each pixel in the image that does not equal 0 (transparent) and modify its color
