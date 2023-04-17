@@ -96,11 +96,10 @@ public class GamePanel extends JPanel
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			
 			try
 			{
 				currentServerState = Client.server.getServerState();
-				System.out.println("Server state: " + currentServerState);
+				System.out.println("Server state: " + currentServerState + " ID: " + Client.playerID);
 			}
 			catch(RemoteException exception)
 			{
@@ -118,9 +117,11 @@ public class GamePanel extends JPanel
 				//without this check
 				if(gameState == null || gameState.currentPlayerID != Client.playerID)
 				{
+					
 					try
 					{
 						gameState = Client.server.getGameState();
+						System.out.println(gameState);
 					}
 					catch(RemoteException exception)
 					{
@@ -128,11 +129,15 @@ public class GamePanel extends JPanel
 					}
 				}
 				//Process players turn
+				if(gameState != null)
+					System.out.println(gameState.currentPlayerID + " "+ Client.playerID);
 				if(gameState != null && gameState.currentPlayerID == Client.playerID)
 				{
+					System.out.println("Your turn");
 					//Turn not started yet
 					if(currentGameStateUpdate == null)
 					{
+						System.out.println("Generated GameStateUpdate for turn");
 						currentGameStateUpdate = new GameStateUpdate();
 						currentGameStateUpdate.playerID = Client.playerID;
 					}

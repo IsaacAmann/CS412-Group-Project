@@ -1,10 +1,14 @@
 import java.util.HashMap;
+import java.io.Serializable;
 
 
-public class GameState
+public class GameState implements Serializable
 {
+	private static final int NUMBER_STATES = 42;
+	
 	//ID of the player who's turn it is
 	public int currentPlayerID;
+	
 	
 	public HashMap<Integer, StateData> states;
 	private HashMap<Integer, Integer> playerColors;
@@ -13,6 +17,11 @@ public class GameState
 	{
 		states = new HashMap<Integer, StateData>();
 		this.playerColors = playerColors;
+		//Create StateData objects with base values
+		for(int i = 0; i < NUMBER_STATES; i++)
+		{
+			 states.put(i, new StateData(-1, i, 0, 1)); 
+		}
 	}
 	
 	public void mergeGameStateUpdate(GameStateUpdate update)
@@ -61,8 +70,16 @@ public class GameState
 	//Class to hold the information for territories.
 	//Creating a separate class from the State class in the client since the extra methods
 	//And drawing information is not needed server side and it would be wasteful to send it over the network
-	public class StateData
+	public class StateData implements Serializable
 	{
+		public StateData(int ownerPlayerID, int stateID, int numberUnits, int color)
+		{
+			this.ownerPlayerID = ownerPlayerID;
+			this.stateID = stateID;
+			this.numberUnits = numberUnits;
+			this.color = color;
+		}
+		
 		public int ownerPlayerID;
 		public int stateID;
 		//Number of units present in the territory

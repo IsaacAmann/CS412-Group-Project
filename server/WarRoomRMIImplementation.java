@@ -40,6 +40,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	private static int playersReady = 0;
 	
 	public static int currentPlayerID;
+	public static int currentPlayerIndex;
 	
 	//Server's copy of the game state
 	public static GameState currentGameState;
@@ -54,11 +55,13 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	//Change the server status and allow the first player to submit a turn
 	public void startGame()
 	{
-		
+		System.out.println("Starting game...");
 		//get the first player's ID to allow them to submit a turn
 		currentPlayerID = playerIDs.get(0);
+		currentPlayerIndex = 0;
 		//Generate GameState
 		currentGameState = new GameState(playerColors);
+		currentGameState.currentPlayerID = currentPlayerID;
 		//Assign starting territories
 		
 		//change server status and allow turns to be submitted
@@ -101,8 +104,8 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	//With their copy of the gameState
 	public GameState getGameState() throws RemoteException
 	{
-		System.out.println("Sent gameState");
-		return null;
+		System.out.println("Sent gameState, player turn: " + currentGameState.currentPlayerID);
+		return currentGameState;
 	}
 	
 	//RMI method for testing the server connection
