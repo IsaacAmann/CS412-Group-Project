@@ -124,6 +124,8 @@ public class GamePanel extends JPanel
 					{
 						gameState = Client.server.getGameState();
 						System.out.println(gameState);
+						//Set color of status bar
+						Client.statusBar.setBackground(new Color(gameState.playerColors.get(Client.playerID)));
 					}
 					catch(RemoteException exception)
 					{

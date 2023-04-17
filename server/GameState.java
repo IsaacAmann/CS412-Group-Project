@@ -11,7 +11,7 @@ public class GameState implements Serializable
 	
 	
 	public HashMap<Integer, StateData> states;
-	private HashMap<Integer, Integer> playerColors;
+	public HashMap<Integer, Integer> playerColors;
 	
 	public GameState(HashMap<Integer, Integer> playerColors)
 	{
