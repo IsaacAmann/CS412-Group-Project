@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JSlider;
 import javax.swing.JButton;
 import java.awt.Dimension;
+import java.rmi.RemoteException;
 
 public class StateSelectionPanel extends JPanel
 {
@@ -66,7 +67,23 @@ public class StateSelectionPanel extends JPanel
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			if(GamePanel.gameState.currentPlayerID == Client.playerID)
+			{
+				try
+				{
+					Client.server.postTurn(GamePanel.currentGameStateUpdate, Client.playerID);
+					
+					//Increment the currentPlayerID to prevent double sending the turn update and allow
+					//Client to accept a new game state, value does not matter, server will replace it with new gamestate
+					GamePanel.gameState.currentPlayerID++;
+				}
+				catch(RemoteException exception)
+				{
+					exception.printStackTrace();
+				}
 			
+				GamePanel.currentGameStateUpdate = null;
+			}
 		}
 	}
 	

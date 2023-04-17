@@ -113,6 +113,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		if(playerID == currentGameState.currentPlayerID)
 		{
 			currentGameState.mergeGameStateUpdate(update);
+			//Move on to next player
+			
+			currentGameState.currentPlayerID = playerIDs.get((currentGameState.currentPlayerID + 1) % playerIDs.size());
+			System.out.println("CurrentPlayeR: " + currentGameState.currentPlayerID);
 		}
 	}
 	

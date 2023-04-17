@@ -43,8 +43,8 @@ public class GamePanel extends JPanel
 	
 	//Game logic stuff
 	//Clients copy of the game state, should be replaced with the server's version after requesting it 
-	public GameState gameState;
-	private GameStateUpdate currentGameStateUpdate;
+	public static GameState gameState;
+	public static GameStateUpdate currentGameStateUpdate;
 	public int currentServerState;
 	
 	private Timer gameTimer;
