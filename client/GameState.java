@@ -57,6 +57,7 @@ public class GameState implements Serializable
 					sourceState.numberUnits -= currentMove.units;
 					destinationState.numberUnits = currentMove.units - destinationState.numberUnits;
 					destinationState.ownerPlayerID = currentMove.senderPlayerID;
+					destinationState.color = playerColors.get(currentMove.senderPlayerID);
 				}
 				//Destination state has enough to defend, subtract from the total units
 				else 
