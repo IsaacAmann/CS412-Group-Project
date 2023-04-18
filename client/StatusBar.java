@@ -32,4 +32,9 @@ public class StatusBar extends JPanel
 		this.add(playerNameLabel);
 		this.add(serverStatusLabel);
 	}
+	
+	public void setStatusMessage(String input)
+	{
+		serverStatusLabel.setText("Server Status: " + input);
+	}
 }

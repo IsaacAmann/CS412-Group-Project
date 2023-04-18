@@ -101,6 +101,7 @@ public class GamePanel extends JPanel
 			try
 			{
 				currentServerState = Client.server.getServerState();
+				
 				System.out.println("Server state: " + currentServerState + " ID: " + Client.playerID);
 			}
 			catch(RemoteException exception)
@@ -126,6 +127,7 @@ public class GamePanel extends JPanel
 						System.out.println(gameState);
 						//Set color of status bar
 						Client.statusBar.setBackground(new Color(gameState.playerColors.get(Client.playerID)));
+						Client.statusBar.setStatusMessage("Other players turn");
 					}
 					catch(RemoteException exception)
 					{
@@ -142,6 +144,7 @@ public class GamePanel extends JPanel
 					if(currentGameStateUpdate == null)
 					{
 						System.out.println("Generated GameStateUpdate for turn");
+						Client.statusBar.setStatusMessage("Your turn");
 						currentGameStateUpdate = new GameStateUpdate();
 						currentGameStateUpdate.playerID = Client.playerID;
 					}
