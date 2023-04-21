@@ -20,6 +20,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	public static final int STARTING_UNITS = 20;
 	public static final int MAX_PLAYERS = 2;
+	//Picked some states in an order that promotes spacing between starting locations
 	public static final int[] STARTING_LOCATIONS=
 	{
 		8, //Alabama

@@ -24,6 +24,10 @@ import java.rmi.server.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.MessageDigest;
+
 
 public class GamePanel extends JPanel
 {
@@ -36,6 +40,10 @@ public class GamePanel extends JPanel
 	public static final int WAITING_PLAYERS = 1;
 	public static final int GAME_RUNNING = 2;
 	public static final int GAME_OVER = 3;
+	
+	//Checksum / hash for checking copy of game state
+	
+	
 	
 	public static State[] states = new State[NUMBER_STATES];
 	private static BufferedImage mapImage;

@@ -101,13 +101,20 @@ public class StateSelectionPanel extends JPanel
 				int senderPlayerID = Client.playerID;
 				int units = unitSlider.getValue();
 				
-				//Creating a local game state update to merge a move in real time as they are made client side
-				GameStateUpdate tempUpdate = new GameStateUpdate();
-				tempUpdate.addMove(units, sourceStateID, destinationStateID, senderPlayerID);
-				GamePanel.gameState.mergeGameStateUpdate(tempUpdate);
-				
-				GamePanel.currentGameStateUpdate.addMove(units, sourceStateID, destinationStateID, senderPlayerID);
-				
+				//Check if move is valid
+				if(GamePanel.gameState.states.get(sourceStateID).numberUnits >= units)
+				{
+					//Creating a local game state update to merge a move in real time as they are made client side
+					GameStateUpdate tempUpdate = new GameStateUpdate();
+					tempUpdate.addMove(units, sourceStateID, destinationStateID, senderPlayerID);
+					GamePanel.gameState.mergeGameStateUpdate(tempUpdate);
+					
+					GamePanel.currentGameStateUpdate.addMove(units, sourceStateID, destinationStateID, senderPlayerID);
+					
+					//Update slider min / max
+					unitSlider.setMaximum(GamePanel.gameState.states.get(sourceStateID).numberUnits);
+					unitSlider.setValue(0);
+				}
 			}
 		}
 	}

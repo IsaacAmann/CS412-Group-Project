@@ -79,9 +79,7 @@ public class State
 			}
 		}
 		//Figure estimate of midpoint of the state image
-		//int width = Math.abs(imageX - imageX2);
 		int width = imageX + imageX2;
-		//int height = Math.abs(imageY - imageY2);
 		int height = imageY + imageY2;
 		this.unitCounterX = width / 2;
 		this.unitCounterY = height / 2;
