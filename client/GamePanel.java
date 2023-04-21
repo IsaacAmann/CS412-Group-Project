@@ -35,7 +35,7 @@ public class GamePanel extends JPanel
 	public static final int NUMBER_STATES = 42;
 	//Amount of time the game waits to check the gamestate again, should be a large amount of time so the server
 	//is not overwhelmed
-	public static final int frameWaitTime = 3000;
+	public static final int frameWaitTime = 250;
 	//Server states
 	public static final int WAITING_PLAYERS = 1;
 	public static final int GAME_RUNNING = 2;
@@ -131,8 +131,17 @@ public class GamePanel extends JPanel
 					
 					try
 					{
-						gameState = Client.server.getGameState();
-						System.out.println(gameState);
+						//Request hash of game state
+						short serverHash = Client.server.getGameStateHash();
+						if(gameState == null || serverHash != gameState.hash)
+						{
+							gameState = Client.server.getGameState();
+							System.out.println(gameState);
+						}
+						else
+						{
+							System.out.println(serverHash + " " + gameState.hash);
+						}
 						//Set color of status bar
 						Client.statusBar.setBackground(new Color(gameState.playerColors.get(Client.playerID)));
 						Client.statusBar.setStatusMessage("Other players turn");

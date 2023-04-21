@@ -9,9 +9,12 @@ public class GameState implements Serializable
 	//ID of the player who's turn it is
 	public int currentPlayerID;
 	
-	
 	public HashMap<Integer, StateData> states;
 	public HashMap<Integer, Integer> playerColors;
+	
+	//Using as a sort of checksum, allows the clients to update more frequently without
+	//Sending the entire gamestate if it has not changed
+	public short hash;
 	
 	public GameState(HashMap<Integer, Integer> playerColors)
 	{
@@ -23,6 +26,13 @@ public class GameState implements Serializable
 			//Create states with default values
 			states.put(i, new StateData(-1, i, 0, Color.WHITE.hashCode())); 
 		}
+	}
+	
+	public void updateHash(short newHash)
+	{
+		//Using a short instead of the full integer hashcode to send less data over network
+		//May need to increase to full integer, collision freezes the client
+		hash = newHash;
 	}
 	
 	public void mergeGameStateUpdate(GameStateUpdate update)

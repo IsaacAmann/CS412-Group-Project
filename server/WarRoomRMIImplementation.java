@@ -10,6 +10,8 @@ import java.lang.InterruptedException;
 
 import java.awt.Color;
 
+import java.util.Random;
+
 public class WarRoomRMIImplementation extends UnicastRemoteObject implements WarRoomServerInterface
 {
 	//Constants
@@ -35,6 +37,9 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	//Random generator for the player colors
 	private Random colorGenerator;
+	
+	//Random generator for game state version
+	private static Random gameStateRandom = new Random();
 	
 	public static ArrayList<String> chatMessages = new ArrayList<String>();
 	
@@ -114,6 +119,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		if(playerID == currentGameState.currentPlayerID)
 		{
 			currentGameState.mergeGameStateUpdate(update);
+			currentGameState.updateHash((short) gameStateRandom.nextInt());
 			//Move on to next player
 			
 			currentGameState.currentPlayerID = playerIDs.get((currentGameState.currentPlayerID + 1) % playerIDs.size());
@@ -128,6 +134,12 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	{
 		System.out.println("Sent gameState, player turn: " + currentGameState.currentPlayerID);
 		return currentGameState;
+	}
+	
+	public short getGameStateHash() throws RemoteException
+	{
+		System.out.println("Sent hash: " + currentGameState.hash);
+		return currentGameState.hash;
 	}
 	
 	//RMI method for testing the server connection
