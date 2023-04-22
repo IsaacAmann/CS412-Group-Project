@@ -11,6 +11,11 @@ import java.lang.InterruptedException;
 import java.awt.Color;
 
 import java.util.Random;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import javax.swing.Timer;
+import java.time.*;
 
 public class WarRoomRMIImplementation extends UnicastRemoteObject implements WarRoomServerInterface
 {
@@ -22,6 +27,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	public static final int STARTING_UNITS = 20;
 	public static final int MAX_PLAYERS = 2;
+	
+	public static final int SERVER_REFRESH_RATE = 1000;
+	//Set the amount of time the server waits before kicking a player from the game 
+	public static final Duration PLAYER_TIMEOUT_LIMIT = Duration.ofSeconds(4);
 	//Picked some states in an order that promotes spacing between starting locations
 	public static final int[] STARTING_LOCATIONS=
 	{
@@ -60,6 +69,12 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	public static int currentPlayerID;
 	public static int currentPlayerIndex;
 	
+	//Timer for serverLoop
+	private Timer serverTimer;
+	
+	//Server clock
+	private Clock serverClock;
+	
 	//Server's copy of the game state
 	public static GameState currentGameState;
 	
@@ -67,7 +82,9 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	{
 		serverStatus = WAITING_PLAYERS;
 		colorGenerator = new Random();
-		
+		serverTimer = new Timer(SERVER_REFRESH_RATE, new ServerLoop());
+		serverClock = Clock.systemDefaultZone();
+		serverTimer.start();
 	}
 	
 	//Change the server status and allow the first player to submit a turn
@@ -89,6 +106,12 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		}
 		//change server status and allow turns to be submitted
 		serverStatus = GAME_RUNNING;
+		
+	}
+	
+	private void updateLastSeen(int playerID)
+	{
+		players.get(playerID).lastSeen = serverClock.instant();
 	}
 	
 	//Interface implementations (playerID should be last argument of each one for consistency)
@@ -96,6 +119,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	{
 		String newMessage = "<" + players.get(playerID).name + " " + java.time.LocalTime.now().format(timeFormat) + "> " + message;
 		chatMessages.add(newMessage);
+		updateLastSeen(playerID);
 	}
 	
 	//Returns an array of new chats for the client. totalChats should be the total chats that the client already has
@@ -124,21 +148,24 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			
 			currentGameState.currentPlayerID = playerIDs.get((currentGameState.currentPlayerID + 1) % playerIDs.size());
 			System.out.println("CurrentPlayeR: " + currentGameState.currentPlayerID);
+			updateLastSeen(playerID);
 		}
 	}
 	
 	//Should include updated map information if the player has submitted a turn
 	//The client should keep note of the current player locally, if it is different, they should merge the GameStateUpdate
 	//With their copy of the gameState
-	public GameState getGameState() throws RemoteException
+	public GameState getGameState(int playerID) throws RemoteException
 	{
 		System.out.println("Sent gameState, player turn: " + currentGameState.currentPlayerID);
+		updateLastSeen(playerID);
 		return currentGameState;
 	}
 	
-	public short getGameStateHash() throws RemoteException
+	public short getGameStateHash(int playerID) throws RemoteException
 	{
 		System.out.println("Sent hash: " + currentGameState.hash);
+		updateLastSeen(playerID);
 		return currentGameState.hash;
 	}
 	
@@ -185,10 +212,36 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		}
 	}
 	
-	public int getServerState()
+	public int getServerState(int playerID)
 	{
+		updateLastSeen(playerID);
 		return this.serverStatus;
 	}
 	
+	private class ServerLoop implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			System.out.println("server loop");
+			//Check for players who's connection timed out
+			Iterator<Integer> iterator = playerIDs.iterator();
+			int currentPlayerID;
+			while(iterator.hasNext())
+			{
+				currentPlayerID = iterator.next();
+				if(players.get(currentPlayerID).lastSeen.isBefore(serverClock.instant().minusMillis(PLAYER_TIMEOUT_LIMIT.toMillis())))
+				{
+					//Set all held territories to neutral
+					
+					//Remove entry from player colors list
+					playerColors.remove(currentPlayerID);
+					currentGameState.playerColors.remove(currentPlayerID);
+					System.out.println(currentPlayerID + " has been kicked from the game (timeout)");
+					//Remove player from players list
+					iterator.remove();
+				}
+			}
+		}
+	}
 }
 

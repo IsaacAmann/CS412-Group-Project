@@ -92,7 +92,7 @@ public class GamePanel extends JPanel
 		//get initial server status
 		try
 		{
-			currentServerState = Client.server.getServerState();
+			currentServerState = Client.server.getServerState(Client.playerID);
 		}
 		catch(RemoteException exception)
 		{
@@ -108,7 +108,7 @@ public class GamePanel extends JPanel
 		{
 			try
 			{
-				currentServerState = Client.server.getServerState();
+				currentServerState = Client.server.getServerState(Client.playerID);
 				
 				System.out.println("Server state: " + currentServerState + " ID: " + Client.playerID);
 			}
@@ -132,10 +132,10 @@ public class GamePanel extends JPanel
 					try
 					{
 						//Request hash of game state
-						short serverHash = Client.server.getGameStateHash();
+						short serverHash = Client.server.getGameStateHash(Client.playerID);
 						if(gameState == null || serverHash != gameState.hash)
 						{
-							gameState = Client.server.getGameState();
+							gameState = Client.server.getGameState(Client.playerID);
 							System.out.println(gameState);
 						}
 						else

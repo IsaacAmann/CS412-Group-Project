@@ -1,4 +1,4 @@
-
+import java.time.Instant;
 
 public class Player
 {
@@ -6,6 +6,7 @@ public class Player
 	public int playerID;
 	public static int nextID = 100;
 	public int playerColor;
+	public Instant lastSeen;
 	
 	public Player(String name, int playerColor)
 	{
