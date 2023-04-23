@@ -1,3 +1,5 @@
+package client;
+
 import java.util.HashMap;
 import java.io.Serializable;
 import java.awt.Color;

@@ -1,3 +1,5 @@
+package client;
+
 import java.awt.Image;
 import java.awt.image.*;
 import javax.imageio.ImageIO;
@@ -14,7 +16,7 @@ public class State
 	public String name;
 	public BufferedImage image;
 	public int ownerPlayerID;
-	//Used to lookup StateData within the hashmap inside of the GameState class
+	//Used to lookup StateData within the hashmap inside the GameState class
 	public int stateID;
 	public int color;
 	public int units;
@@ -92,9 +94,11 @@ public class State
 		System.out.println(name + " has been clicked on");
 		//changeColor(-324234);
 		/*
+
 		if(ownerPlayerID == Client.playerID)
 		{
 			GamePanel.selectedState = this;
+			changeColor(-324234);
 		}
 		*/
 	}
@@ -115,6 +119,7 @@ public class State
 						if(image.getRGB(i,j) != Color.BLACK.hashCode())
 							image.setRGB(i, j, newRGB); 
 					}
+
 				}
 			}
 		}

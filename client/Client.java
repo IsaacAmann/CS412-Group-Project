@@ -1,9 +1,14 @@
+package client;
+
 import javax.swing.JFrame;
 import javax.swing.*;
 import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.border.*;
+
+import java.awt.*;
+
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,14 +19,14 @@ import java.rmi.server.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-
 public class Client extends JFrame
 {
 	//Constants
-	public static final int WINDOW_WIDTH = 1300;
+
 	public static final int WINDOW_HEIGHT = 700;
+	public static final int WINDOW_WIDTH = 1300;
 	
-	public static final int GAME_PANEL_HEIGHT = WINDOW_HEIGHT;
+	public static final int GAME_PANEL_HEIGHT = 700;
 	public static final int GAME_PANEL_WIDTH = 1000;
 	
 	//Server statuses
@@ -45,12 +50,21 @@ public class Client extends JFrame
 	
 	public Client()
 	{
-		super("War Room Client");
 
+		//Gui Setup
+		super("War Room - 412");
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+
+		//When Minimized
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		
+
+		//When Maximized (Default)
+		//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		this.getContentPane().setBackground(Color.DARK_GRAY);
+		this.setVisible(true);
+
+
 		//this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		//this.getContentPane().setLayout(null);
 		//Create rightPanel
@@ -63,17 +77,19 @@ public class Client extends JFrame
 		statusBar = new StatusBar();
 		
 		//Add connection window
-		this.add(new ConnectionWindow());
+		//this.add(new ConnectionWindow());
 		
 		//add panels 
 		this.add(gamePanel, BorderLayout.CENTER);
 		this.add(rightPanel, BorderLayout.LINE_END);
 		this.add(statusBar, BorderLayout.PAGE_START);
 		
+
 		this.setVisible(true);
+
 	}
 	
-	//register with server
+	//Register with server
 	//Register with server and wait for game to start
 	public static void registerWithServer(String playerName)
 	{
@@ -103,11 +119,9 @@ public class Client extends JFrame
 		{
 			server.testPrint("Hey");
 		}
-		catch(Exception e)
-		{
-			
+		catch(Exception e) {
+
 		}
-	
 	}
 	
 	private void createRightPanel()
@@ -115,20 +129,20 @@ public class Client extends JFrame
 		
 		rightPanel = new JPanel();
 		stateSelectionPanel = new StateSelectionPanel();
-		
+
+
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		//rightPanel.setLayout(null);
-		rightPanel.setBackground(Color.RED);
-		//rightPanel.setSize(RIGHT_PANEL_WIDTH, RIGHT_PANEL_HEIGHT);
-		
-		Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
+		rightPanel.setBackground(Color.BLACK);
+
+		int width = (int)(Math.round(getWidth() * 0.2));
+		rightPanel.setSize((WINDOW_HEIGHT - GAME_PANEL_WIDTH), GAME_PANEL_HEIGHT);
+
+
+		Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
 		rightPanel.setBorder(border);
 		
 		rightPanel.add(stateSelectionPanel);
-		
-		//rightPanel.setVisible(true);
-		
-		
 		//rightPanel = new StateSelectionPanel();
 		rightPanel.setVisible(true);
 	}
@@ -137,13 +151,13 @@ public class Client extends JFrame
 	{
 		gamePanel = new GamePanel();
 		gamePanel.setSize(GAME_PANEL_WIDTH, GAME_PANEL_HEIGHT);
-		
+		gamePanel.setBackground(Color.BLACK);
+
 		gamePanel.setLayout(null);
-		
-		Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
+
+		Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
 		gamePanel.setBorder(border);
-		
+
 		gamePanel.setVisible(true);
 	}
-	
 }
