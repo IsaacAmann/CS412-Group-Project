@@ -80,6 +80,8 @@ public class ConnectionWindow extends JInternalFrame
 			
 			//Begin game loop in gamePanel
 			Client.gamePanel.startGame();
+			//Set the player name in the status bar
+			Client.statusBar.playerNameLabel.setText("Player Name: " + playerName.getText());
 			//Close the JInternalFrame
 			getConnectionWindow().setVisible(false);
 		}

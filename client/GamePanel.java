@@ -26,18 +26,28 @@ import java.rmi.server.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.MessageDigest;
+
 
 public class GamePanel extends JPanel
 {
 	//Constants
 	public static final int NUMBER_STATES = 42;
+
 	//Amount of time the game waits to check the game state again, should be a large amount of time so the server
+
 	//is not overwhelmed
-	public static final int frameWaitTime = 3000;
+	public static final int frameWaitTime = 250;
 	//Server states
 	public static final int WAITING_PLAYERS = 1;
 	public static final int GAME_RUNNING = 2;
 	public static final int GAME_OVER = 3;
+	
+	//Checksum / hash for checking copy of game state
+	
+	
 	
 	public static State[] states = new State[NUMBER_STATES];
 	private static BufferedImage mapImage;
@@ -45,8 +55,8 @@ public class GamePanel extends JPanel
 	
 	//Game logic stuff
 	//Clients copy of the game state, should be replaced with the server's version after requesting it 
-	public GameState gameState;
-	private GameStateUpdate currentGameStateUpdate;
+	public static GameState gameState;
+	public static GameStateUpdate currentGameStateUpdate;
 	public int currentServerState;
 	
 	private Timer gameTimer;
@@ -57,26 +67,13 @@ public class GamePanel extends JPanel
 	public GamePanel()
 	{
 		super();
-		/*
-		//Load Images
-		File curDir = new File(".");
-		getAllFiles(curDir);
-
-		try
-		{
-			mapImage = ImageIO.read(new File("./src/client/assets/sea.png"));
-		}
-		catch(IOException e)
-		{
-			System.out.println("Could not load image");
-		}
-		*/
-
 
 		//Add mouse listener to game panel. Mouse events only triggered by mouse input inside game panel
 		//Other inputs from the sidebar should be handled separately
 		mouseListener = new GamePanelMouseListener();
 		this.addMouseListener(mouseListener);
+		selectedState = null;
+		selectedState2 = null;
 		//Load states
 		loadStates();
 		
@@ -90,7 +87,7 @@ public class GamePanel extends JPanel
 		//get initial server status
 		try
 		{
-			currentServerState = Client.server.getServerState();
+			currentServerState = Client.server.getServerState(Client.playerID);
 		}
 		catch(RemoteException exception)
 		{
@@ -121,30 +118,60 @@ public class GamePanel extends JPanel
 		{
 			try
 			{
-				currentServerState = Client.server.getServerState();
-				System.out.println("Server state: " + currentServerState);
+				currentServerState = Client.server.getServerState(Client.playerID);
+				
+				System.out.println("Server state: " + currentServerState + " ID: " + Client.playerID);
 			}
 			catch(RemoteException exception)
 			{
 				exception.printStackTrace();
 			}
-			//Request GameStateUpdate from server if the game has started
-			if(currentServerState == GAME_RUNNING)
+			//Tasks to run while waiting for players
+			if(currentServerState == WAITING_PLAYERS)
 			{
-				try
+				System.out.println("Waiting for players");
+			}
+			//Request GameStateUpdate from server if the game has started
+			else if(currentServerState == GAME_RUNNING)
+			{
+				//Needs to check if the player is in the middle of their turn, will overwrite their altered game state
+				//without this check
+				if(gameState == null || gameState.currentPlayerID != Client.playerID)
 				{
-					gameState = Client.server.getGameState();
-				}
-				catch(RemoteException exception)
-				{
-					exception.printStackTrace();
+					
+					try
+					{
+						//Request hash of game state
+						short serverHash = Client.server.getGameStateHash(Client.playerID);
+						if(gameState == null || serverHash != gameState.hash)
+						{
+							gameState = Client.server.getGameState(Client.playerID);
+							System.out.println(gameState);
+						}
+						else
+						{
+							System.out.println(serverHash + " " + gameState.hash);
+						}
+						//Set color of status bar
+						Client.statusBar.setBackground(new Color(gameState.playerColors.get(Client.playerID)));
+						Client.statusBar.setStatusMessage("Other players turn");
+					}
+					catch(RemoteException exception)
+					{
+						exception.printStackTrace();
+					}
 				}
 				//Process players turn
-				if(gameState.currentPlayerID == Client.playerID)
+				if(gameState != null)
+					System.out.println(gameState.currentPlayerID + " "+ Client.playerID);
+				if(gameState != null && gameState.currentPlayerID == Client.playerID)
 				{
+					System.out.println("Your turn");
 					//Turn not started yet
 					if(currentGameStateUpdate == null)
 					{
+						System.out.println("Generated GameStateUpdate for turn");
+						Client.statusBar.setStatusMessage("Your turn");
 						currentGameStateUpdate = new GameStateUpdate();
 						currentGameStateUpdate.playerID = Client.playerID;
 					}
@@ -153,6 +180,23 @@ public class GamePanel extends JPanel
 						
 					}
 				}
+				//Update States with information from GameState received from server
+				if(gameState != null)
+				{
+					for(int i = 0;i < states.length; i++)
+					{
+						GameState.StateData currentStateData = gameState.states.get(i);
+						states[i].units = currentStateData.numberUnits;
+						states[i].changeColor(currentStateData.color);
+						states[i].ownerPlayerID = currentStateData.ownerPlayerID;
+						
+					}
+				}
+			}
+			//Handle end game stuff and clean up
+			else if(currentServerState == GAME_OVER)
+			{
+				
 			}
 			repaint();
 		}
@@ -160,6 +204,7 @@ public class GamePanel extends JPanel
 	//Creating state objects
 	private void loadStates()
 	{
+
 		//Hard Coding the states
 		states[0] = new State("maine",
 				"./src/client/assets/maine.png", 0);
@@ -246,14 +291,13 @@ public class GamePanel extends JPanel
 		states[41] = new State("washington",
 				"./src/client/assets/washington.png",41);
 
-
-
 	}
 	//Go through each state image and see if the color is anything other than transparent
 	//If it is, this indicates that state was clicked on
 	public static void checkStateMouse(int mouseX, int mouseY)
 	{
 		int currentRGB;
+		System.out.println("Mouse click at: "+ mouseX + ", " + mouseY);
 		for(int i = 0; i < states.length; i++)
 		{
 			if (states[i] != null) {
@@ -267,12 +311,16 @@ public class GamePanel extends JPanel
 				//allow player to select friendly state
 				if (selectedState == null && states[i].ownerPlayerID == Client.playerID) {
 					selectedState = states[i];
-					Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: " + states[i].name);
+					System.out.println("SELECTED" + selectedState);
+					//Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: " + states[i].name);
+					Client.stateSelectionPanel.setSelectedState(states[i]);
 				}
 				//Select second state to receive unit movement
-				else if (selectedState2 == null && selectedState != null) {
+				else if(selectedState != null && states[i] != selectedState)
+				{
 					selectedState2 = states[i];
-					Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: " + states[i].name);
+					//Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: " + states[i].name);
+					Client.stateSelectionPanel.setSelectedState2(states[i]);
 				}
 				break; //Allows for only one state to be selected.
 			}

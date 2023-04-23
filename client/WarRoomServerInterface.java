@@ -13,7 +13,10 @@ public interface WarRoomServerInterface extends Remote
 	public void postTurn(GameStateUpdate update, int playerID) throws RemoteException;
 	
 	//Return the current game state, should be called by the client every couple seconds (unless it is already their turn
-	public GameState getGameState() throws RemoteException;
+	public GameState getGameState(int playerID) throws RemoteException;
+	
+	//Get hash of the current game state, should check against the hash of the client's current gamestate
+	public short getGameStateHash(int playerID) throws RemoteException;
 	
 	public void testPrint(String message) throws RemoteException;
 	
@@ -24,5 +27,5 @@ public interface WarRoomServerInterface extends Remote
 	
 	public void requestGameStart(int playerID) throws RemoteException;
 	
-	public int getServerState() throws RemoteException;
+	public int getServerState(int playerID) throws RemoteException;
 }

@@ -37,6 +37,7 @@ public class Client extends JFrame
 	public static JPanel rightPanel;
 	public static GamePanel gamePanel;
 	public static StateSelectionPanel stateSelectionPanel;
+	public static StatusBar statusBar;
 	
 	public static Graphics gameGraphics;
 	
@@ -72,22 +73,20 @@ public class Client extends JFrame
 		//Create gamePanel
 		createGamePanel();
 		
+		//Create status bar
+		statusBar = new StatusBar();
+		
 		//Add connection window
 		//this.add(new ConnectionWindow());
 		
 		//add panels 
 		this.add(gamePanel, BorderLayout.CENTER);
 		this.add(rightPanel, BorderLayout.LINE_END);
+		this.add(statusBar, BorderLayout.PAGE_START);
 		
-		
-		//Set graphics object for drawing game screen
-		gameGraphics = gamePanel.getGraphics();
 
-		//gameGraphics.draw(new Rectangle2D.Float(40,40,20,20));
-		//this.pack();
+		this.setVisible(true);
 
-
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage("./src/client/assets/double_bars.png"));
 	}
 	
 	//Register with server
