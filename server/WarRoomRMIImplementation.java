@@ -218,6 +218,13 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		return this.serverStatus;
 	}
 	
+	public void kickPlayer(int playerID)
+	{
+		//Remove entry from player colors list
+		playerColors.remove(currentPlayerID);
+		currentGameState.playerColors.remove(currentPlayerID);
+	}
+		
 	private class ServerLoop implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -231,11 +238,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 				currentPlayerID = iterator.next();
 				if(players.get(currentPlayerID).lastSeen.isBefore(serverClock.instant().minusMillis(PLAYER_TIMEOUT_LIMIT.toMillis())))
 				{
-					//Set all held territories to neutral
-					
-					//Remove entry from player colors list
-					playerColors.remove(currentPlayerID);
-					currentGameState.playerColors.remove(currentPlayerID);
+					kickPlayer(currentPlayerID);
 					System.out.println(currentPlayerID + " has been kicked from the game (timeout)");
 					//Remove player from players list
 					iterator.remove();
