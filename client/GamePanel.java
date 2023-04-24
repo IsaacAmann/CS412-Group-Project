@@ -67,8 +67,9 @@ public class GamePanel extends JPanel
 		//Load Images
 		try
 		{
-			mapImage = ImageIO.read(new File("assets/sea.png"));
-			
+			//mapImage = ImageIO.read(new File("assets/sea.png"));
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			mapImage = ImageIO.read(loader.getResource("assets/sea.png"));
 		}
 		catch(IOException e)
 		{
