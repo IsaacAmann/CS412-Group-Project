@@ -9,6 +9,9 @@ import java.awt.Color;
 import java.lang.Math;
 import java.awt.Font;
 
+import java.net.URL;
+import java.lang.ClassLoader;
+
 public class State
 {
 	public String name;
@@ -42,7 +45,9 @@ public class State
 		unitCounterOffsetY = 0;
 		try
 		{
-			image = ImageIO.read(new File(imagePath));
+			ClassLoader loader = Thread.currentThread().getContextClassLoader();
+			image = ImageIO.read(loader.getResource(imagePath));
+			//image = ImageIO.read(new File(imagePath));
 		}
 		catch(IOException e)
 		{
