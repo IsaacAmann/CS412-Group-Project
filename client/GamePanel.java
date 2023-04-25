@@ -82,7 +82,7 @@ public class GamePanel extends JPanel
 		selectedState = null;
 		selectedState2 = null;
 		//Load states
-		loadStates();
+		states = StateLoader.loadStates();
 		
 		//Start game loop
 		gameTimer = new Timer(frameWaitTime, new GameLoop());
