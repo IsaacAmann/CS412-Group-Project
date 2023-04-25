@@ -26,4 +26,6 @@ public interface WarRoomServerInterface extends Remote
 	public void requestGameStart(int playerID) throws RemoteException;
 	
 	public int getServerState(int playerID) throws RemoteException;
+	
+	public PostGameInfo getPostGameInfo() throws RemoteException;
 }

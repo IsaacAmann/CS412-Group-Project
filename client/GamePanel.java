@@ -130,7 +130,7 @@ public class GamePanel extends JPanel
 				//without this check
 				if(gameState == null || gameState.currentPlayerID != Client.playerID)
 				{
-					
+				
 					try
 					{
 						//Request hash of game state
@@ -200,7 +200,7 @@ public class GamePanel extends JPanel
 			//Handle end game stuff and clean up
 			else if(currentServerState == GAME_OVER)
 			{
-				
+				//Request Winner info and display it
 			}
 			repaint();
 		}

@@ -78,6 +78,9 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	//Server's copy of the game state
 	public static GameState currentGameState;
 	
+	//Winner information (Requested on client when GAME_OVER server state is detected)
+	public PostGameInfo postGameInfo;
+	
 	public WarRoomRMIImplementation() throws RemoteException
 	{
 		serverStatus = WAITING_PLAYERS;
@@ -165,6 +168,12 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			System.out.println("CurrentPlayeR: " + currentGameState.currentPlayerID);
 			
 			currentGameState.updateHash((short) gameStateRandom.nextInt());
+			
+			//Check for win conditions and update server status 
+			if(checkForWinner() == true)
+			{
+				serverStatus = GAME_OVER;
+			}
 			updateLastSeen(playerID);
 		}
 	}
@@ -229,6 +238,11 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		}
 	}
 	
+	public PostGameInfo getPostGameInfo() throws RemoteException
+	{
+		return this.postGameInfo;
+	}
+	
 	public int getServerState(int playerID)
 	{
 		updateLastSeen(playerID);
@@ -266,6 +280,30 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			
 			}
 		}
+	}
+	
+	public boolean checkForWinner()
+	{
+		//Check if all held states are held by just 1 player
+		int currentPlayerID= -1;
+		boolean output = true;
+		for(int i = 0; i < currentGameState.states.size(); i++)
+		{
+			GameState.StateData currentState = currentGameState.states.get(i);
+			if(currentState.ownerPlayerID != -1)
+			{
+				if(currentPlayerID == -1)
+				{
+					currentPlayerID = currentState.ownerPlayerID;
+				}
+				else if(currentPlayerID != currentState.ownerPlayerID)
+				{
+					output = false;
+					break;
+				}
+			}
+		}
+		return output;
 	}
 		
 	private class ServerLoop implements ActionListener
