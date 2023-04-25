@@ -104,6 +104,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			currentGameState.states.get(STARTING_LOCATIONS[i]).numberUnits = STARTING_UNITS;
 			currentGameState.states.get(STARTING_LOCATIONS[i]).color = playerColors.get(playerIDs.get(i));
 		}
+		currentGameState.updateHash((short) gameStateRandom.nextInt());
 		//change server status and allow turns to be submitted
 		serverStatus = GAME_RUNNING;
 		
@@ -145,6 +146,8 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			currentGameState.mergeGameStateUpdate(update);
 			currentGameState.updateHash((short) gameStateRandom.nextInt());
 			//Check if game has cycled back to first player
+			System.out.println("Updating game state");
+			System.out.println((currentGameState.currentPlayerID + 1 ) % playerIDs.size());
 			if((currentGameState.currentPlayerID + 1) % playerIDs.size() == 0)
 			{
 				//Increment unit counts on held states
@@ -161,7 +164,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			currentGameState.currentPlayerID = playerIDs.get((currentGameState.currentPlayerID + 1) % playerIDs.size());
 			System.out.println("CurrentPlayeR: " + currentGameState.currentPlayerID);
 			
-			
+			currentGameState.updateHash((short) gameStateRandom.nextInt());
 			updateLastSeen(playerID);
 		}
 	}
@@ -235,8 +238,34 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	public void kickPlayer(int playerID)
 	{
 		//Remove entry from player colors list
-		playerColors.remove(currentPlayerID);
-		currentGameState.playerColors.remove(currentPlayerID);
+		playerColors.remove(playerID);
+		currentGameState.playerColors.remove(playerID);
+		//Set held states back to neutral 
+		for(int i = 0; i < currentGameState.states.size(); i++)
+		{
+			GameState.StateData currentState = currentGameState.states.get(i);
+			if(currentState.ownerPlayerID == playerID)
+			{
+				//reset back to neutral color
+				currentState.color = Color.WHITE.hashCode();
+				//set units back to 0
+				currentState.numberUnits = 0;
+			}
+		}
+		//Increment turn if player kicked during their turn
+		if(currentGameState.currentPlayerID == playerID)
+		{
+			System.out.println("Incrementing turn");
+			try
+			{
+				//Post blank turn with kicked player's ID
+				postTurn(new GameStateUpdate(), playerID);
+			}
+			catch(RemoteException e)
+			{
+			
+			}
+		}
 	}
 		
 	private class ServerLoop implements ActionListener

@@ -145,6 +145,8 @@ public class GamePanel extends JPanel
 							System.out.println(serverHash + " " + gameState.hash);
 						}
 						//Set color of status bar
+						System.out.println(gameState.playerColors);
+						System.out.println(gameState.playerColors.get(Client.playerID));
 						Client.statusBar.setBackground(new Color(gameState.playerColors.get(Client.playerID)));
 						Client.statusBar.setStatusMessage("Other players turn");
 					}
@@ -159,6 +161,16 @@ public class GamePanel extends JPanel
 				if(gameState != null && gameState.currentPlayerID == Client.playerID)
 				{
 					System.out.println("Your turn");
+					//Catch the case that the last player quits in the middle of the current player's turn
+					//also prevents the player being kicked for connection timeout during their turn
+					try
+					{
+						int serverState = Client.server.getServerState(Client.playerID);
+					}
+					catch(RemoteException exception)
+					{
+						exception.printStackTrace();
+					}
 					//Turn not started yet
 					if(currentGameStateUpdate == null)
 					{
