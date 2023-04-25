@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.io.Serializable;
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class GameState implements Serializable
 {
@@ -90,6 +91,7 @@ public class GameState implements Serializable
 			this.stateID = stateID;
 			this.numberUnits = numberUnits;
 			this.color = color;
+			adjacentStates = new ArrayList<Integer>();
 		}
 		
 		public int ownerPlayerID;
@@ -97,5 +99,6 @@ public class GameState implements Serializable
 		//Number of units present in the territory
 		public int numberUnits;
 		public int color;
+		public ArrayList<Integer> adjacentStates;
 	}
 }

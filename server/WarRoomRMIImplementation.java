@@ -144,10 +144,24 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		{
 			currentGameState.mergeGameStateUpdate(update);
 			currentGameState.updateHash((short) gameStateRandom.nextInt());
+			//Check if game has cycled back to first player
+			if((currentGameState.currentPlayerID + 1) % playerIDs.size() == 0)
+			{
+				//Increment unit counts on held states
+				for(int i = 0; i < currentGameState.states.size(); i++)
+				{
+					GameState.StateData currentState = currentGameState.states.get(i);
+					if(currentState.ownerPlayerID != -1)
+					{
+						currentState.numberUnits += STARTING_UNITS;
+					}
+				}
+			}
 			//Move on to next player
-			
 			currentGameState.currentPlayerID = playerIDs.get((currentGameState.currentPlayerID + 1) % playerIDs.size());
 			System.out.println("CurrentPlayeR: " + currentGameState.currentPlayerID);
+			
+			
 			updateLastSeen(playerID);
 		}
 	}
