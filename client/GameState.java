@@ -51,7 +51,7 @@ public class GameState implements Serializable
 				destinationState.numberUnits += currentMove.units;
 			}
 			//Unit movement to neutral state, add units to state and then change the owner to sender
-			else if(destinationState.ownerPlayerID == -1)
+			else if(destinationState.ownerPlayerID == -1 && currentMove.units > 0)
 			{
 				sourceState.numberUnits -= currentMove.units;
 				destinationState.numberUnits += currentMove.units;
