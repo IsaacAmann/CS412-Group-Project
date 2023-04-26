@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.lang.Math;
 import java.awt.Font;
+import java.util.HashSet;
 
 import java.net.URL;
 import java.lang.ClassLoader;
@@ -29,6 +30,8 @@ public class State
 	
 	private static Font counterFont;
 	
+	public HashSet<Integer> adjacentStates;
+	
 	public State(String name, String imagePath, int stateID)
 	{
 		this.name = name;
@@ -43,6 +46,7 @@ public class State
 		this.units = 0;
 		unitCounterOffsetX = 0;
 		unitCounterOffsetY = 0;
+		adjacentStates = new HashSet<Integer>();
 		try
 		{
 			ClassLoader loader = Thread.currentThread().getContextClassLoader();
@@ -129,6 +133,11 @@ public class State
 	{
 		this.unitCounterOffsetX = x;
 		this.unitCounterOffsetY = y;
+	}
+	
+	public boolean isAdjacent(State otherState)
+	{
+		return adjacentStates.contains(otherState.stateID);
 	}
 	
 	//Call from paint when the image needs to be drawn, g2D passed from paint, observer should be a reference to the GamePanel object
