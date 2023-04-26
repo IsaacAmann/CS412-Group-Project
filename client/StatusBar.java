@@ -17,7 +17,7 @@ public class StatusBar extends JPanel
 	
 	JLabel serverStatusLabel;
 	JLabel playerNameLabel;
-	
+	JButton requestStartButton;
 	
 	public StatusBar()
 	{
@@ -27,14 +27,41 @@ public class StatusBar extends JPanel
 		//Create labels:
 		serverStatusLabel = new JLabel("Server Status: ");
 		playerNameLabel = new JLabel("Player Name: " );
+		requestStartButton = new JButton("Request Game Start");
+		requestStartButton.addActionListener(new startListener());
 		
 		//add components
 		this.add(playerNameLabel);
 		this.add(serverStatusLabel);
+		this.add(requestStartButton);
 	}
 	
 	public void setStatusMessage(String input)
 	{
 		serverStatusLabel.setText("Server Status: " + input);
+	}
+	
+	public JButton getRequestStartButton()
+	{
+		return requestStartButton;
+	}
+	
+	public class startListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			try
+			{
+				if(Client.playerID != -1)
+				{
+					Client.server.requestGameStart(Client.playerID);
+					Client.statusBar.getRequestStartButton().setVisible(false);
+				}
+			}
+			catch(RemoteException exception)
+			{
+				exception.printStackTrace();
+			}
+		}
 	}
 }

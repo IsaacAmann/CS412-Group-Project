@@ -26,7 +26,8 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	public static final int GAME_OVER = 3;
 	
 	public static final int STARTING_UNITS = 20;
-	public static final int MAX_PLAYERS = 2;
+	public static final int MAX_PLAYERS = 8;
+	public static final int RESTART_DELAY = 5000;
 	
 	public static final int SERVER_REFRESH_RATE = 1000;
 	//Set the amount of time the server waits before kicking a player from the game 
@@ -71,6 +72,9 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	//Timer for serverLoop
 	private Timer serverTimer;
+	
+	//Timer for server restart
+	Timer serverRestartTimer;
 	
 	//Server clock
 	private Clock serverClock;
@@ -173,6 +177,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			if(checkForWinner() == true)
 			{
 				serverStatus = GAME_OVER;
+				playersReady = 0;
+				serverRestartTimer = new Timer(RESTART_DELAY, new ServerRestart());
+				serverRestartTimer.setRepeats(false);
+				serverRestartTimer.start();
 			}
 			updateLastSeen(playerID);
 		}
@@ -190,17 +198,11 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	public short getGameStateHash(int playerID) throws RemoteException
 	{
-		System.out.println("Sent hash: " + currentGameState.hash);
+		//System.out.println("Sent hash: " + currentGameState.hash);
 		updateLastSeen(playerID);
 		return currentGameState.hash;
 	}
-	
-	//RMI method for testing the server connection
-	public void testPrint(String message) throws RemoteException
-	{	
-		System.out.println(message);
-	}
-	
+		
 	//Returns the playerID if the player registered sucessfuly, returns current server status otherwise indicating the game is already runnning
 	public int registerPlayer(String playerName) throws RemoteException
 	{
@@ -230,10 +232,11 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	{
 		if(serverStatus == WAITING_PLAYERS)
 		{
-			playersReady++;
-			if(playersReady == players.size())
+			System.out.println("Player: " + playerID + " is ready for game start");
+			if(++playersReady == players.size())
 			{
-				serverStatus = GAME_RUNNING;
+				System.out.println("All players ready, starting early");
+				startGame();
 			}
 		}
 	}
@@ -303,14 +306,34 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 				}
 			}
 		}
+		//Create a PostGameInfo object if there is a winner
+		if(output == true)
+		{
+			postGameInfo = new PostGameInfo(currentPlayerID, players.get(currentPlayerID).name);
+		}
 		return output;
 	}
+		
+	private class ServerRestart implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e)
+		{
+			//Clear game data
+			chatMessages.clear();
+			players.clear();
+			playerColors.clear();
+			playersReady = 0;
+			//Reset server state to WAITING_PLAYERS
+			serverStatus = WAITING_PLAYERS;
+			System.out.println("Restarting...");
+		}
+	}	
 		
 	private class ServerLoop implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			System.out.println("server loop");
+			//System.out.println("server loop");
 			//Check for players who's connection timed out
 			Iterator<Integer> iterator = playerIDs.iterator();
 			int currentPlayerID;

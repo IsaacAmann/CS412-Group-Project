@@ -33,6 +33,7 @@ public class Client extends JFrame
 	public static GamePanel gamePanel;
 	public static StateSelectionPanel stateSelectionPanel;
 	public static StatusBar statusBar;
+	public static ConnectionWindow connectionWindow;
 	
 	public static Graphics gameGraphics;
 	
@@ -63,7 +64,8 @@ public class Client extends JFrame
 		statusBar = new StatusBar();
 		
 		//Add connection window
-		this.add(new ConnectionWindow());
+		connectionWindow = new ConnectionWindow();
+		this.add(connectionWindow);
 		
 		//add panels 
 		this.add(gamePanel, BorderLayout.CENTER);
@@ -98,16 +100,7 @@ public class Client extends JFrame
 		catch(Exception e)
 		{
 			e.printStackTrace();
-		}
-		try
-		{
-			server.testPrint("Hey");
-		}
-		catch(Exception e)
-		{
-			
-		}
-	
+		}	
 	}
 	
 	private void createRightPanel()

@@ -16,8 +16,6 @@ public interface WarRoomServerInterface extends Remote
 	//Get hash of the current game state, should check against the hash of the client's current gamestate
 	public short getGameStateHash(int playerID) throws RemoteException;
 	
-	public void testPrint(String message) throws RemoteException;
-	
 	//Should be called by clients wanting to join the game, should return an integer indicating whether
 	//they were added or indicate why they were not added
 	//Should also have a return value to indicate that the game started
