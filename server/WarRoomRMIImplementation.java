@@ -107,6 +107,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		//Assign starting territories
 		for(int i = 0; i < playerIDs.size(); i++)
 		{
+			System.out.println("looping");
 			currentGameState.states.get(STARTING_LOCATIONS[i]).ownerPlayerID = playerIDs.get(i);
 			currentGameState.states.get(STARTING_LOCATIONS[i]).numberUnits = STARTING_UNITS;
 			currentGameState.states.get(STARTING_LOCATIONS[i]).color = playerColors.get(playerIDs.get(i));
@@ -114,6 +115,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		currentGameState.updateHash((short) gameStateRandom.nextInt());
 		//change server status and allow turns to be submitted
 		serverStatus = GAME_RUNNING;
+		System.out.println("Break");
 		
 	}
 	
@@ -321,6 +323,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			//Clear game data
 			chatMessages.clear();
 			players.clear();
+			playerIDs.clear();
 			playerColors.clear();
 			playersReady = 0;
 			//Reset server state to WAITING_PLAYERS
@@ -333,9 +336,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	{
 		public void actionPerformed(ActionEvent e)
 		{
+			//System.out.println("server loop");
+
 			if(serverStatus == GAME_RUNNING)
 			{
-				//System.out.println("server loop");
 				//Check for players who's connection timed out
 				Iterator<Integer> iterator = playerIDs.iterator();
 				int currentPlayerID;

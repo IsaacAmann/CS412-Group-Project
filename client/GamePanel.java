@@ -215,6 +215,7 @@ public class GamePanel extends JPanel
 				Client.server = null;
 				Client.connectionWindow.setVisible(true);
 				Client.statusBar.getRequestStartButton().setVisible(true);
+				gameState = null;
 				gameTimer.stop();
 			}
 			repaint();
@@ -244,7 +245,7 @@ public class GamePanel extends JPanel
 					Client.stateSelectionPanel.setSelectedState(states[i]);
 				}
 				//Select second state to receive unit movement
-				else if(selectedState != null && states[i] != selectedState && selectedState.isAdjacent(states[i]))
+				else if(selectedState != null && states[i] != selectedState /* && selectedState.isAdjacent(states[i])*/)
 				{
 					selectedState2 = states[i];
 					//Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: " + states[i].name);
