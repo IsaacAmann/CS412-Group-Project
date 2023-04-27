@@ -15,10 +15,9 @@ public class LoaderThread implements Runnable
 		
 		public void run()
 		{
+			//Call State constructor and place result in the correct index of the states array
 			State newState = new State(stateName, imagePath, stateID);
-			synchronized(this)
-			{
-				states[stateID] = newState;
-			}
+			//Synchronization not needed for array access, no thread ever accesses the same index
+			states[stateID] = newState;
 		}
 	}	

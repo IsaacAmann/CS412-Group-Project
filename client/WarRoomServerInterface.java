@@ -21,9 +21,12 @@ public interface WarRoomServerInterface extends Remote
 	//Should also have a return value to indicate that the game started
 	public int registerPlayer(String playerName) throws RemoteException;
 	
+	//Allows client to request that the server starts early without reaching the maximum players
 	public void requestGameStart(int playerID) throws RemoteException;
 	
+	//Should return the current state of the server
 	public int getServerState(int playerID) throws RemoteException;
 	
+	//Returns the post game info object
 	public PostGameInfo getPostGameInfo() throws RemoteException;
 }

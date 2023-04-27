@@ -107,7 +107,6 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		//Assign starting territories
 		for(int i = 0; i < playerIDs.size(); i++)
 		{
-			System.out.println("looping");
 			currentGameState.states.get(STARTING_LOCATIONS[i]).ownerPlayerID = playerIDs.get(i);
 			currentGameState.states.get(STARTING_LOCATIONS[i]).numberUnits = STARTING_UNITS;
 			currentGameState.states.get(STARTING_LOCATIONS[i]).color = playerColors.get(playerIDs.get(i));
@@ -116,9 +115,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		//change server status and allow turns to be submitted
 		serverStatus = GAME_RUNNING;
 		System.out.println("Break");
-		
 	}
 	
+	//Should be called in most RMI request methods
+	//Used to detect if a client has disconnected
 	private void updateLastSeen(int playerID)
 	{
 		players.get(playerID).lastSeen = serverClock.instant();
@@ -150,6 +150,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	//Allow client to post their turn to the server, should update gamestate and set currentPlayerID to the next player
 	public void postTurn(GameStateUpdate update, int playerID) throws RemoteException
 	{
+		//Check if it is the turn of the client sending the request
 		if(playerID == currentGameState.currentPlayerID)
 		{
 			currentGameState.mergeGameStateUpdate(update);
@@ -200,7 +201,6 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	
 	public short getGameStateHash(int playerID) throws RemoteException
 	{
-		//System.out.println("Sent hash: " + currentGameState.hash);
 		updateLastSeen(playerID);
 		return currentGameState.hash;
 	}
@@ -208,6 +208,8 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	//Returns the playerID if the player registered sucessfuly, returns current server status otherwise indicating the game is already runnning
 	public int registerPlayer(String playerName) throws RemoteException
 	{
+		//Returns the serverStatus to allow a client joining late to detect that the game has started
+		//All playerID's should be >= 100
 		int output = this.serverStatus;
 		//allow players to join if in the waiting for players state
 		if(serverStatus == WAITING_PLAYERS)
@@ -282,14 +284,14 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 			}
 			catch(RemoteException e)
 			{
-			
+				e.printStackTrace();
 			}
 		}
 	}
 	
 	public boolean checkForWinner()
 	{
-		//Check if all held states are held by just 1 player
+		//Check if all non neutral states are held by just 1 player
 		int currentPlayerID= -1;
 		boolean output = true;
 		for(int i = 0; i < currentGameState.states.size(); i++)
@@ -315,7 +317,9 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		}
 		return output;
 	}
-		
+	
+	//ActionListener used by the restart timer. Clears game data and sets server back to WAITING_PLAYERS
+	//state to allow another game to begin
 	private class ServerRestart implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -332,12 +336,12 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		}
 	}	
 		
+	//Action listener for server loop to run checks that need to be ran every few seconds.
+	//Includes checking for client connection time outs
 	private class ServerLoop implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			//System.out.println("server loop");
-
 			if(serverStatus == GAME_RUNNING)
 			{
 				//Check for players who's connection timed out

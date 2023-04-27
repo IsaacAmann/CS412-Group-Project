@@ -9,9 +9,11 @@ public class StateLoader
 	
 	public static State[] loadStates()
 	{
+		//Creating a cached thread pool to load states and calculate center points for the unit counter label
 		ExecutorService threadPool = Executors.newCachedThreadPool();
 		State[] states = new State[GamePanel.NUMBER_STATES];
 		
+		//Adding LoaderThreads to the thread pool
 		threadPool.execute(new LoaderThread(states, "maine", "assets/maine.png", 0));
 		threadPool.execute(new LoaderThread(states, "newEngland", "assets/newEngland.png", 1));
 		threadPool.execute(new LoaderThread(states, "newYork", "assets/newYork.png", 2));
@@ -66,6 +68,7 @@ public class StateLoader
 			exception.printStackTrace();
 		}
 		
+		//Setting unit label offsets and setting adjacent states
 		states[0].adjacentStates.add(1);
 		
 		states[1].adjacentStates.add(0);
