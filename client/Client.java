@@ -4,6 +4,7 @@ import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.border.*;
+import java.awt.Dimension;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -23,6 +24,8 @@ public class Client extends JFrame
 	
 	public static final int GAME_PANEL_HEIGHT = WINDOW_HEIGHT;
 	public static final int GAME_PANEL_WIDTH = 1000;
+	public static final int RIGHT_PANEL_WIDTH = WINDOW_WIDTH - GAME_PANEL_WIDTH;
+	public static final int RIGHT_PANEL_HEIGHT = WINDOW_HEIGHT;
 	
 	//Server statuses
 	public static final int WAITING_PLAYERS = 1;
@@ -112,7 +115,7 @@ public class Client extends JFrame
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		//rightPanel.setLayout(null);
 		rightPanel.setBackground(Color.RED);
-		//rightPanel.setSize(RIGHT_PANEL_WIDTH, RIGHT_PANEL_HEIGHT);
+		rightPanel.setPreferredSize(new Dimension(RIGHT_PANEL_WIDTH, RIGHT_PANEL_HEIGHT));
 		
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
 		rightPanel.setBorder(border);

@@ -235,7 +235,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		if(serverStatus == WAITING_PLAYERS)
 		{
 			System.out.println("Player: " + playerID + " is ready for game start");
-			if(++playersReady == players.size())
+			if(++playersReady == players.size() && playersReady > 1)
 			{
 				System.out.println("All players ready, starting early");
 				startGame();
