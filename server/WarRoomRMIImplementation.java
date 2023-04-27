@@ -333,19 +333,22 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			//System.out.println("server loop");
-			//Check for players who's connection timed out
-			Iterator<Integer> iterator = playerIDs.iterator();
-			int currentPlayerID;
-			while(iterator.hasNext())
+			if(serverStatus == GAME_RUNNING)
 			{
-				currentPlayerID = iterator.next();
-				if(players.get(currentPlayerID).lastSeen.isBefore(serverClock.instant().minusMillis(PLAYER_TIMEOUT_LIMIT.toMillis())))
+				//System.out.println("server loop");
+				//Check for players who's connection timed out
+				Iterator<Integer> iterator = playerIDs.iterator();
+				int currentPlayerID;
+				while(iterator.hasNext())
 				{
-					kickPlayer(currentPlayerID);
-					System.out.println(currentPlayerID + " has been kicked from the game (timeout)");
-					//Remove player from players list
-					iterator.remove();
+					currentPlayerID = iterator.next();
+					if(players.get(currentPlayerID).lastSeen.isBefore(serverClock.instant().minusMillis(PLAYER_TIMEOUT_LIMIT.toMillis())))
+					{
+						kickPlayer(currentPlayerID);
+						System.out.println(currentPlayerID + " has been kicked from the game (timeout)");
+						//Remove player from players list
+						iterator.remove();
+					}
 				}
 			}
 		}
