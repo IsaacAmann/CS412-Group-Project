@@ -1,3 +1,5 @@
+package server;
+
 import java.rmi.registry.*;
 import java.rmi.*;
 import java.util.*;
@@ -5,7 +7,7 @@ import java.util.*;
 public class WarRoomServer
 {
 	public static final int PORT = 12345;
-	
+
 	public static void main(String[] args)
 	{
 		try
@@ -13,7 +15,7 @@ public class WarRoomServer
 			WarRoomServerInterface RMIServer = new WarRoomRMIImplementation();
 			Registry registry = LocateRegistry.createRegistry(PORT);
 			registry.rebind("WarRoomRMIImplementation", RMIServer);
-			
+
 		}
 		catch(Exception e)
 		{
