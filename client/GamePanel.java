@@ -201,7 +201,18 @@ public class GamePanel extends JPanel
 				try
 				{
 					PostGameInfo postGameInfo = Client.server.getPostGameInfo();
-					JOptionPane.showMessageDialog(null, "Game over, Winner: " + postGameInfo.winnerName);
+					
+					Font font = new Font("Monospaced", Font.BOLD, 16);
+                    UIManager.put("OptionPane.font", font);
+                    UIManager.put("OptionPane.messageForeground", Color.WHITE);
+                    UIManager.put("Panel.background", Color.BLACK);
+                    UIManager.put("OptionPane.background", Color.BLACK);
+                    UIManager.put("Button.background", Color.BLACK);
+                    UIManager.put("Button.foreground", Color.WHITE);
+                    UIManager.put("Button.font", font);
+                    UIManager.put("Button.focusPainted", false);
+
+                    JOptionPane.showMessageDialog(null, "Game over, Winner: " + postGameInfo.winnerName);
 					
 				}
 				catch(RemoteException exception)

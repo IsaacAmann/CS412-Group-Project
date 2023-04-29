@@ -90,11 +90,6 @@ public class Client extends JFrame
 		this.add(statusBar, BorderLayout.PAGE_START);
 		
 		this.setVisible(true);
-		
-		JOptionPane pane = new JOptionPane();
-		pane.setFont(new Font("Monospaced", Font.BOLD, 10));
-		pane.setBackground(Color.BLACK);
-		pane.showMessageDialog(null, "Game over, Winner: " );
 	}
 	
 	//register with server
