@@ -3,21 +3,22 @@ package server;
 import java.util.HashMap;
 import java.io.Serializable;
 import java.awt.Color;
+import java.util.ArrayList;
 
 public class GameState implements Serializable
 {
 	private static final int NUMBER_STATES = 42;
-
+	
 	//ID of the player who's turn it is
 	public int currentPlayerID;
-
+	
 	public HashMap<Integer, StateData> states;
 	public HashMap<Integer, Integer> playerColors;
-
+	
 	//Using as a sort of checksum, allows the clients to update more frequently without
 	//Sending the entire gamestate if it has not changed
 	public short hash;
-
+	
 	public GameState(HashMap<Integer, Integer> playerColors)
 	{
 		states = new HashMap<Integer, StateData>();
@@ -26,17 +27,17 @@ public class GameState implements Serializable
 		for(int i = 0; i < NUMBER_STATES; i++)
 		{
 			//Create states with default values
-			states.put(i, new StateData(-1, i, 0, Color.WHITE.hashCode()));
+			states.put(i, new StateData(-1, i, 0, Color.WHITE.hashCode())); 
 		}
 	}
-
+	
 	public void updateHash(short newHash)
 	{
 		//Using a short instead of the full integer hashcode to send less data over network
 		//May need to increase to full integer, collision freezes the client
 		hash = newHash;
 	}
-
+	
 	public void mergeGameStateUpdate(GameStateUpdate update)
 	{
 		//Process unit moves
@@ -52,7 +53,7 @@ public class GameState implements Serializable
 				destinationState.numberUnits += currentMove.units;
 			}
 			//Unit movement to neutral state, add units to state and then change the owner to sender
-			else if(destinationState.ownerPlayerID == -1)
+			else if(destinationState.ownerPlayerID == -1 && currentMove.units > 0)
 			{
 				sourceState.numberUnits -= currentMove.units;
 				destinationState.numberUnits += currentMove.units;
@@ -72,15 +73,15 @@ public class GameState implements Serializable
 					destinationState.color = playerColors.get(currentMove.senderPlayerID);
 				}
 				//Destination state has enough to defend, subtract from the total units
-				else
+				else 
 				{
 					sourceState.numberUnits -= currentMove.units;
 					destinationState.numberUnits -= currentMove.units;
 				}
-			}
+			}	
 		}
 	}
-
+	
 	//Class to hold the information for territories.
 	//Creating a separate class from the State class in the client since the extra methods
 	//And drawing information is not needed server side and it would be wasteful to send it over the network
@@ -92,12 +93,14 @@ public class GameState implements Serializable
 			this.stateID = stateID;
 			this.numberUnits = numberUnits;
 			this.color = color;
+			adjacentStates = new ArrayList<Integer>();
 		}
-
+		
 		public int ownerPlayerID;
 		public int stateID;
 		//Number of units present in the territory
 		public int numberUnits;
 		public int color;
+		public ArrayList<Integer> adjacentStates;
 	}
 }
