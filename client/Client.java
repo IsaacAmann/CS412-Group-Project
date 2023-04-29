@@ -5,14 +5,18 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.border.*;
 
+import java.awt.*;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import java.rmi.*;
 import java.rmi.server.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Arrays;
 
 
 public class Client extends JFrame
@@ -32,6 +36,10 @@ public class Client extends JFrame
 	public static JPanel rightPanel;
 	public static GamePanel gamePanel;
 	public static StateSelectionPanel stateSelectionPanel;
+
+	public static JTextField chatField;
+	public static JTextArea chatArea;
+	public static int chatNum = 0;
 	
 	public static Graphics gameGraphics;
 	
@@ -72,6 +80,22 @@ public class Client extends JFrame
 		
 		//this.pack();
 		this.setVisible(true);
+
+		//chatStuff();
+	}
+
+	public static void chatStuff()
+	{
+		try {
+			while (true)
+			{
+				String[] messages = Client.server.getChats(chatNum);
+				chatArea.append("\n" + messages[0]);
+				chatNum++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//register with server
@@ -116,6 +140,33 @@ public class Client extends JFrame
 		
 		rightPanel = new JPanel();
 		stateSelectionPanel = new StateSelectionPanel();
+
+		chatField = new JTextField("Enter Message Here");
+		chatField.addActionListener(
+			new ActionListener()
+			{
+				public void actionPerformed(ActionEvent event)
+				{
+					try {
+						Client.server.sendChatMessage(event.getActionCommand(), playerID);
+						chatField.setText("");
+
+						while (true)
+						{
+							String[] messages = Client.server.getChats(chatNum);
+							chatArea.append("\n" + messages[0]);
+							chatNum++;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		);				
+
+		chatArea = new JTextArea();
+		chatArea.setEditable(false);
+		chatArea.setPreferredSize(new Dimension(100, 525));
 		
 		rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 		//rightPanel.setLayout(null);
@@ -126,12 +177,15 @@ public class Client extends JFrame
 		rightPanel.setBorder(border);
 		
 		rightPanel.add(stateSelectionPanel);
+		rightPanel.add(chatArea);
+		rightPanel.add(chatField);
 		
 		//rightPanel.setVisible(true);
 		
-		
 		//rightPanel = new StateSelectionPanel();
 		rightPanel.setVisible(true);
+
+		
 	}
 	
 	private void createGamePanel()

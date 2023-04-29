@@ -68,7 +68,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		{
 			newChats[i] = chatMessages.get(i+(chatMessages.size() - 1));
 		}
-		return null;
+		return newChats;
 	}
 	
 	//Allow client to post their turn to the server, should update gamestate and set currentPlayerID to the next player

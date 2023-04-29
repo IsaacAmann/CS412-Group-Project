@@ -13,7 +13,6 @@ public class WarRoomServer
 			WarRoomServerInterface RMIServer = new WarRoomRMIImplementation();
 			Registry registry = LocateRegistry.createRegistry(PORT);
 			registry.rebind("WarRoomRMIImplementation", RMIServer);
-			
 		}
 		catch(Exception e)
 		{
