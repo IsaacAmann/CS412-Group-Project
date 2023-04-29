@@ -1,4 +1,3 @@
-package client;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -21,8 +20,8 @@ public class Client extends JFrame
 	public static final int WINDOW_WIDTH = 1300;
 	public static final int WINDOW_HEIGHT = 740;
 	
-	public static final int GAME_PANEL_WIDTH = 1020;
-	public static final int GAME_PANEL_HEIGHT = WINDOW_HEIGHT;
+	public static final int GAME_PANEL_WIDTH = 1000;
+	public static final int GAME_PANEL_HEIGHT = 700;
 	
 	public static final int RIGHT_PANEL_WIDTH = WINDOW_WIDTH - GAME_PANEL_WIDTH;
 	public static final int RIGHT_PANEL_HEIGHT = WINDOW_HEIGHT;
@@ -159,12 +158,8 @@ public class Client extends JFrame
 					chatField.setText("");
 					try {
 						Client.server.sendChatMessage(event.getActionCommand(), playerID);
-						while (true)
-						{
-							String[] messages = Client.server.getChats(chatNum);
-							chatArea.append("\n" + messages[0]);
-							chatNum++;
-						}
+						chatField.setText("");
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -177,6 +172,7 @@ public class Client extends JFrame
 		chatArea.setEditable(false);
 		chatArea.setPreferredSize(new Dimension(100, 525));
 		chatArea.setBackground(Color.BLACK);
+		chatArea.setForeground(Color.WHITE);
 		
 		
 		

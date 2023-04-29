@@ -1,4 +1,3 @@
-package server;
 
 import java.rmi.*;
 import java.rmi.server.*;
@@ -142,11 +141,12 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		//The return array only includes the chats the client has not seen yet
 		//int i = chatMessages.size() - totalChats - 1;
 		String[] newChats = new String[chatMessages.size() - totalChats];
+		System.out.println("getchats");
 		for(int i = 0; i < newChats.length; i++)
 		{
-			newChats[i] = chatMessages.get(i+(chatMessages.size() - 1));
+			newChats[i] = chatMessages.get((chatMessages.size() - 1)-i);
 		}
-		return null;
+		return newChats;
 	}
 	
 	//Allow client to post their turn to the server, should update gamestate and set currentPlayerID to the next player

@@ -1,4 +1,3 @@
-package client;
 
 import javax.swing.*;
 import javax.swing.BoxLayout;
@@ -56,7 +55,7 @@ public class StateSelectionPanel extends JPanel
 		moveUnitsButton.setFont(new Font("Monospaced", Font.BOLD, 20));
 		moveUnitsButton.setPreferredSize((new Dimension(200,40)));
 		moveUnitsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-		moveUnitsButton.addActionListener(new SubmitListener());
+		moveUnitsButton.addActionListener(new MoveListener());
 		moveUnitsButton.setBackground(Color.BLACK);
 		
 

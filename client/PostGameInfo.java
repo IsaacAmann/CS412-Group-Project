@@ -1,4 +1,3 @@
-package client;
 
 import java.io.Serializable;
 import java.awt.Color;

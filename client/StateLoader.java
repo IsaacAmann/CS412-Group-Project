@@ -1,4 +1,3 @@
-package client;
 
 import java.net.URL;
 import java.lang.ClassLoader;

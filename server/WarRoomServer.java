@@ -1,4 +1,3 @@
-package server;
 
 import java.rmi.registry.*;
 import java.rmi.*;

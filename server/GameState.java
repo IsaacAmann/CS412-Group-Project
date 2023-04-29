@@ -1,4 +1,3 @@
-package server;
 
 import java.util.HashMap;
 import java.io.Serializable;
