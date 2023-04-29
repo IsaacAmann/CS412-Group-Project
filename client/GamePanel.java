@@ -130,6 +130,24 @@ public class GamePanel extends JPanel
 					}
 				}
 			}
+			//Request chats
+			try
+			{
+				String[] newChats = Client.server.getChats(Client.chatNum);
+				if(newChats != null)
+				{	
+					for(int i = 0; i < newChats.length; i++)
+					{
+						Client.chatArea.append(newChats[newChats.length-1-i] + "\n");
+						Client.chatNum++;
+					}
+				}
+			}
+			catch(RemoteException exception)
+			{
+				exception.printStackTrace();
+			}
+			
 			repaint();
 		}
 	}

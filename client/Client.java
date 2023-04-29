@@ -150,13 +150,7 @@ public class Client extends JFrame
 					try {
 						Client.server.sendChatMessage(event.getActionCommand(), playerID);
 						chatField.setText("");
-
-						while (true)
-						{
-							String[] messages = Client.server.getChats(chatNum);
-							chatArea.append("\n" + messages[0]);
-							chatNum++;
-						}
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

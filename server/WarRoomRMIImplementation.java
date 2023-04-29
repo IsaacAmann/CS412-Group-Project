@@ -64,9 +64,10 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 		//The return array only includes the chats the client has not seen yet
 		//int i = chatMessages.size() - totalChats - 1;
 		String[] newChats = new String[chatMessages.size() - totalChats];
+		System.out.println("getchats");
 		for(int i = 0; i < newChats.length; i++)
 		{
-			newChats[i] = chatMessages.get(i+(chatMessages.size() - 1));
+			newChats[i] = chatMessages.get((chatMessages.size() - 1)-i);
 		}
 		return newChats;
 	}
