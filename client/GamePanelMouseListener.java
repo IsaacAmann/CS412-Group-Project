@@ -7,19 +7,19 @@ public class GamePanelMouseListener implements MouseListener
 {
 	public void mouseClicked(MouseEvent e)
 	{
-
+		
 	}
-
+	
 	public void mouseEntered(MouseEvent e)
 	{
-
+		
 	}
-
+	
 	public void mouseExited(MouseEvent e)
 	{
-
+		
 	}
-
+	
 	public void mousePressed(MouseEvent e)
 	{
 		//System.out.println(e.getX() + "  " + e.getY());
@@ -41,10 +41,10 @@ public class GamePanelMouseListener implements MouseListener
 			//Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: ");
 		}
 	}
-
+	
 	public void mouseReleased(MouseEvent e)
 	{
-
+		
 	}
 
 }

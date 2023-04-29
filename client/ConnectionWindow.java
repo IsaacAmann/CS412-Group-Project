@@ -16,7 +16,7 @@ public class ConnectionWindow extends JInternalFrame
 	private JTextField serverAddress;
 	private JTextField serverPort;
 	private JTextField playerName;
-	private JTextField empty;
+	private JTextField credits;
 
 	private JLabel serverAddressLabel;
 	private JLabel serverPortLabel;
@@ -27,41 +27,58 @@ public class ConnectionWindow extends JInternalFrame
 
 	public ConnectionWindow()
 	{
+	
+		
 		super("Connect to server");
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
+		
+		
+		
+		
 		this.setLayout(new GridLayout(4,2));
 		this.setBackground(Color.BLACK);
 		this.setBorder(new LineBorder(Color.LIGHT_GRAY));
-
+	;
+		
 		//Text input fields
 		serverAddress = new JTextField();
 		serverPort = new JTextField();
 		playerName = new JTextField();
-		empty = new JTextField();
-
+		
+	
+		//Change Caret Color
+		serverAddress.setCaretColor(Color.WHITE);
+		serverPort.setCaretColor(Color.WHITE);
+		playerName.setCaretColor(Color.WHITE);
+	
 		//Center
 		serverAddress.setHorizontalAlignment( JLabel.CENTER );
 		serverPort.setHorizontalAlignment( JLabel.CENTER );
 		playerName.setHorizontalAlignment( JLabel.CENTER );
+		
 
 		//Change Colors to White
-		serverAddress.setForeground(Color.white);
-		serverPort.setForeground(Color.white);
-		playerName.setForeground(Color.white);
+		serverAddress.setForeground(Color.WHITE);
+		serverPort.setForeground(Color.WHITE);
+		playerName.setForeground(Color.WHITE);
+		
 
 		//Set Field Background to Black
 		serverAddress.setBackground(Color.DARK_GRAY);
 		serverPort.setBackground(Color.DARK_GRAY);
 		playerName.setBackground(Color.DARK_GRAY);
+		
 
 		serverAddress.setBorder(new LineBorder(Color.BLACK));
 		serverPort.setBorder(new LineBorder(Color.BLACK));
 		playerName.setBorder(new LineBorder(Color.BLACK));
+		
 
 		serverAddress.setFont(new Font("Monospaced", Font.BOLD, 20));
 		serverPort.setFont(new Font("Monospaced", Font.BOLD, 20));
 		playerName.setFont(new Font("Monospaced", Font.BOLD, 20));
+		
 
 
 
@@ -70,33 +87,39 @@ public class ConnectionWindow extends JInternalFrame
 		serverAddressLabel = new JLabel("-- Server Address --");
 		serverPortLabel = new JLabel("-- Port --");
 		playerNameLabel = new JLabel("-- Name --");
+		credits = new JTextField("-- War Room 412 -- ");
 
 		//Center
 		serverAddressLabel.setHorizontalAlignment( JLabel.CENTER );
 		serverPortLabel.setHorizontalAlignment( JLabel.CENTER );
 		playerNameLabel.setHorizontalAlignment( JLabel.CENTER );
-
+		credits.setHorizontalAlignment( JLabel.CENTER );
+		
 		//Change Colors to White
-		serverAddressLabel.setForeground(Color.white);
-		serverPortLabel.setForeground(Color.white);
-		playerNameLabel.setForeground(Color.white);
+		serverAddressLabel.setForeground(Color.WHITE);
+		serverPortLabel.setForeground(Color.WHITE);
+		playerNameLabel.setForeground(Color.WHITE);
+		credits.setForeground(Color.WHITE);
+		
+		//Credits
+		credits.setBorder(new LineBorder(Color.BLACK));
+		credits.setBackground(Color.BLACK);
+		
 
 		serverAddressLabel.setFont(new Font("Monospaced", Font.BOLD, 20));
 		serverPortLabel.setFont(new Font("Monospaced", Font.BOLD, 20));
 		playerNameLabel.setFont(new Font("Monospaced", Font.BOLD, 20));
-
-		empty.setBackground(Color.BLACK);
-		empty.setBorder(new LineBorder(Color.BLACK));
+		credits.setFont(new Font("Monospaced", Font.BOLD, 20));
 
 		//connection button that triggers the Connect ActionListener
 		connectButton = new JButton("Connect");
 		connectButton.addActionListener(new Connect());
 
 		connectButton.setHorizontalAlignment( JLabel.CENTER );
-		connectButton.setForeground(Color.white);
+		connectButton.setForeground(Color.WHITE);
 		connectButton.setBackground(Color.BLACK);
 		connectButton.setFont(new Font("Monospaced", Font.BOLD, 20));
-		connectButton.setBorder(new LineBorder(Color.LIGHT_GRAY));
+		
 
 		//The GridLayout adds elements from left to right, row by row
 		//Elements must be added in this order to display correctly
@@ -109,7 +132,7 @@ public class ConnectionWindow extends JInternalFrame
 		this.add(playerNameLabel);
 		this.add(playerName);
 
-		this.add(empty);
+		this.add(credits);
 		this.add(connectButton);
 
 		this.setVisible(true);

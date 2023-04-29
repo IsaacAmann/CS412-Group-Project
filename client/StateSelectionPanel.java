@@ -21,8 +21,8 @@ public class StateSelectionPanel extends JPanel
 	JButton moveUnitsButton;
 	//Use JSlider for selecting units to move
 	JSlider unitSlider;
-
-
+	
+	
 	public StateSelectionPanel()
 	{
 		super();
@@ -40,8 +40,8 @@ public class StateSelectionPanel extends JPanel
 
 		selectedStateName.setFont(new Font("Monospaced", Font.BOLD, 20));
 		selectedState2Name.setFont(new Font("Monospaced", Font.BOLD, 20));
-		selectedStateName.setForeground(Color.white);
-		selectedState2Name.setForeground(Color.white);
+		selectedStateName.setForeground(Color.WHITE);
+		selectedState2Name.setForeground(Color.WHITE);
 		selectedStateName.setAlignmentX(Component.CENTER_ALIGNMENT);
 		selectedState2Name.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -50,8 +50,7 @@ public class StateSelectionPanel extends JPanel
 		submitTurnButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		submitTurnButton.addActionListener(new SubmitListener());
 		submitTurnButton.setBackground(Color.BLACK);
-		submitTurnButton.setBorder(new LineBorder(Color.LIGHT_GRAY));
-		//submitTurnButton.setContentAreaFilled(false);
+		
 		
 
 		moveUnitsButton.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -59,11 +58,10 @@ public class StateSelectionPanel extends JPanel
 		moveUnitsButton.setAlignmentX(Component.CENTER_ALIGNMENT);
 		moveUnitsButton.addActionListener(new SubmitListener());
 		moveUnitsButton.setBackground(Color.BLACK);
-		moveUnitsButton.setBorder(new LineBorder(Color.LIGHT_GRAY));
-		//moveUnitsButton.setContentAreaFilled(false);
+		
 
 		unitSlider = new JSlider(0, 10, 0);
-		unitSlider.setPreferredSize((new Dimension(200,400)));
+		unitSlider.setPreferredSize((new Dimension(200,40)));
 		unitSlider.setBackground(Color.DARK_GRAY);
 		unitSlider.setForeground(Color.WHITE);
 		unitSlider.setPaintTicks(true);
@@ -89,21 +87,21 @@ public class StateSelectionPanel extends JPanel
 		selectedStateName.setText("Selected State: " + state.name);
 		unitSlider.setMaximum(state.units);
 		unitSlider.setMajorTickSpacing(state.units / 2);
-
+		
 	}
 	//Update information in the panel when the target state changes
 	public void setSelectedState2(State state)
 	{
 		selectedState2Name.setText("Target State: " + state.name);
 	}
-
+	
 	public void deselect()
 	{
 		selectedStateName.setText("Selected State: ");
 		selectedState2Name.setText("Target State: ");
 	}
-
-	//Action listener for the submit turn button
+	
+	//Action listener for /Submit Turn/ button
 	private class SubmitListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -113,21 +111,22 @@ public class StateSelectionPanel extends JPanel
 				try
 				{
 					Client.server.postTurn(GamePanel.currentGameStateUpdate, Client.playerID);
-
+					
 					//Increment the currentPlayerID to prevent double sending the turn update and allow
 					//Client to accept a new game state, value does not matter, server will replace it with new gamestate
+					
 					GamePanel.gameState.currentPlayerID++;
 				}
 				catch(RemoteException exception)
 				{
 					exception.printStackTrace();
 				}
-
+			
 				GamePanel.currentGameStateUpdate = null;
 			}
 		}
 	}
-
+	
 	private class MoveListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -138,7 +137,7 @@ public class StateSelectionPanel extends JPanel
 				int destinationStateID = GamePanel.selectedState2.stateID;
 				int senderPlayerID = Client.playerID;
 				int units = unitSlider.getValue();
-
+				
 				//Check if move is valid
 				if(GamePanel.gameState.states.get(sourceStateID).numberUnits >= units)
 				{
@@ -146,9 +145,9 @@ public class StateSelectionPanel extends JPanel
 					GameStateUpdate tempUpdate = new GameStateUpdate();
 					tempUpdate.addMove(units, sourceStateID, destinationStateID, senderPlayerID);
 					GamePanel.gameState.mergeGameStateUpdate(tempUpdate);
-
+					
 					GamePanel.currentGameStateUpdate.addMove(units, sourceStateID, destinationStateID, senderPlayerID);
-
+					
 					//Update slider min / max
 					unitSlider.setMaximum(GamePanel.gameState.states.get(sourceStateID).numberUnits);
 					unitSlider.setValue(0);
@@ -156,21 +155,21 @@ public class StateSelectionPanel extends JPanel
 			}
 		}
 	}
-
+	
 	public JLabel getSelectedStateLabel()
 	{
 		return this.selectedStateName;
 	}
-
+	
 	public JLabel getSelectedStateLabel2()
 	{
 		return this.selectedState2Name;
 	}
-
+	
 	public JSlider getUnitSlider()
 	{
 		return this.unitSlider;
 	}
-
-
+	
+	
 }
