@@ -59,6 +59,38 @@ class StatusBar
 	+JLabel serverStatusLabel
 	+JLabel playerNameLabel
 	+JButton requestStartButton
+	
+	+void setStatusMessage(String input)
+	+JButton getRequestStartButton()
+}
+
+class ConnectionWindow extends JInternalFrame
+{
+	-{static} int WINDOW_WIDTH
+	-{static} int WINDOW_HEIGHT
+	-JTextField serverAddress
+	-JTextField serverPort
+	-JTextField playerName
+	-JLabel serverAddressLabel
+	-JLabel serverPortLabel
+	-JLabel playerNameLabel
+	-JButton connectButton
+	
+	-{static} ConnectionWindow getConnectionWindow()
+	
+}
+
+class WarRoomServerInterface extends Remote
+{
+	+void sendChatMessage(String message, int playerID)
+	+String[] getChats(int totalChats)
+	+void postTurn(GameStateUpdate update, int playerID)
+	+GameState getGameState(int playerID)
+	+short getGameStateHash(int playerID)
+	+int registerPlayer(String playerName)
+	+void requestGameStart(int playerID)
+	+int getServerState(int playerID)
+	+PostGameInfo getPostGameInfo()
 }
 
 class State
@@ -120,6 +152,16 @@ class UnitMove implements Serializable
 	+int units
 }
 
+class StateLoader
+{
+	+State[] loadStates()
+}
+
+class LoaderThread implements Runnable
+{
+	
+}	
+
 client --> StateSelectionPanel: Contains
 client --> GamePanel: Contains
 client --> ConnectionWindow: Contains
@@ -133,4 +175,6 @@ GamePanel --> GameStateUpdate: Contains
 GameState --> StateData: Has many
 
 GameStateUpdate --> UnitMove: Has many
+
+StateLoader --> LoaderThread: Has many
 @enduml
