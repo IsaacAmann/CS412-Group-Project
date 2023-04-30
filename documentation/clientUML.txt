@@ -159,7 +159,12 @@ class StateLoader
 
 class LoaderThread implements Runnable
 {
+	-State[] states
+	-String stateName
+	-String imagePath
+	-int stateID
 	
+	+void run()
 }	
 
 client --> StateSelectionPanel: Contains

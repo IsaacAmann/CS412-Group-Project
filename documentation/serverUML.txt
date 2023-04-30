@@ -1,0 +1,96 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class WarRoomServer
+{
+	+{static} int PORT 
+	
+}
+
+class WarRoomRMIImplementation implements WarRoomServerInterface
+{
+	+{static} int WAITING_PLAYERS
+	+{static} int GAME_RUNNING
+	+{static} int GAME_OVER
+	+{static} int STARTING_UNITS
+	+{static} int TURN_UNIT_INCREMENT
+	+{static} int MAX_PLAYERS
+	+{static} int RESTART_DELAY
+	+{static} int SERVER_REFRESH_RATE
+	+{static} Duration PLAYER_TIMEOUT_LIMIT
+	+{static} int[] STARTING_LOCATIONS
+	-Random colorGenerator
+	+{static} gameStateRandom
+	+{static} ArrayList<String>
+	+{static} HashMap<Integer, Player> players
+	+{static} HashMap<Integer, Integer> playerColors
+	+{static} ArrayList<Integer> playersIDs
+	+int serverStatus
+	-DateTimeFormatter timeFormat
+	-{static} int playersReady
+	-{static} int currentPlayerID
+	-{static} int currentPlayerIndex
+	-Timer serverTimer
+	+Timer serverRestartTimer;
+	-Clock serverClock
+	
+	+void startGame()
+	+void updateLastSeen()
+	+void sendChatMessage()
+	+String[] getChats(int totalChats)
+	+void postTurn(GameStateUpdate update, int playerID)
+	+GameState getGameState(int playerID)
+	+short getGameStateHash(int playerID)
+	+int registerPlayer(String playerName)
+	+void requestGameStart(int playerID)
+	+PostGameInfo getPostGameInfo()
+	+int getServerState(int playerID)
+	+void kickPlayer(int playerID)
+	+boolean checkForWinner()	
+}
+
+class GameState implements Serializable
+{
+	-{static} int NUMBER_STATES
+	+HashMap<Integer, StateData> states
+	+HashMap<Integer, Integer> playerColors
+	+short hash;
+	
+	+void updateHash(short newHash)
+	+void mergeGameStateUpdate(GameStateUpdate update)
+	
+}
+
+class StateData implements Serializable
+{
+	+int ownerPlayerID
+	+int stateID
+	+int numberUnits
+	+int color;
+	+ArrayList<Integer> adjacentStates
+}
+
+class PostGameInfo implements Serializable
+{
+	+int winnerPlayerID
+	+String winnerName
+}
+
+class Player
+{
+	+String name
+	+int playerID
+	+{static} nextID
+	+int playerColor
+	+Instant lastSeen
+}
+
+GameState --> StateData: Has many
+
+WarRoomRMIImplementation --> GameState: Contains
+WarRoomRMIImplementation --> PostGameInfo: Contains
+WarRoomRMIImplementation --> Player: Has many
+
+WarRoomServer --> WarRoomRMIImplementation: Contains
+
+@end uml 
