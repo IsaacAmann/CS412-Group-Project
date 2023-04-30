@@ -29,7 +29,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	public static final int STARTING_UNITS = 50;
 	public static final int TURN_UNIT_INCREMENT = 10;
 	public static final int MAX_PLAYERS = 8;
-	public static final int RESTART_DELAY = 5000;
+	public static final int RESTART_DELAY = 15000;
 	
 	public static final int SERVER_REFRESH_RATE = 1000;
 	//Set the amount of time the server waits before kicking a player from the game 
