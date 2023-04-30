@@ -1,3 +1,4 @@
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -12,7 +13,12 @@ public class GameStateUpdate implements Serializable
 		moveList = new ArrayList<UnitMove>();
 	}
 	
-	public class UnitMove
+	public void addMove(int units, int sourceStateID, int destinationStateID, int senderPlayerID)
+	{
+		moveList.add(new UnitMove(units, sourceStateID, destinationStateID, senderPlayerID));
+	}
+	
+	public class UnitMove implements Serializable
 	{
 		public int sourceStateID;
 		public int destinationStateID;

@@ -1,3 +1,5 @@
+
+
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 
@@ -27,15 +29,16 @@ public class GamePanelMouseListener implements MouseListener
 			GamePanel.checkStateMouse(e.getX(), e.getY());
 		}
 		//detect right click
-		else if(e.getButton() == MouseEvent.BUTTON2)
+		else if(e.getButton() == MouseEvent.BUTTON3)
 		{
 			//Deselect current states
 			GamePanel.selectedState = null;
 			GamePanel.selectedState2 = null;
-			
+			System.out.println("right");
 			//update StateSelectionPanel labels
-			Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: ");
-			Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: ");
+			Client.stateSelectionPanel.deselect();
+			//Client.stateSelectionPanel.getSelectedStateLabel().setText("Selected State: ");
+			//Client.stateSelectionPanel.getSelectedStateLabel2().setText("Target State: ");
 		}
 	}
 	
