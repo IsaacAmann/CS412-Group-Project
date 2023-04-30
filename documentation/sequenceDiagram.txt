@@ -1,0 +1,50 @@
+@startuml
+
+group WAITING_PLAYERS 
+	server <- client: registerPlayer() server call
+	server -> client: registerPlayer() response
+	note left
+		Client recieves a playerID integer or the corresponding 
+		integer for the current server status if the game has already started
+	end note
+	client -> client: call startGame()
+	note right: Start clientside gameloop
+	activate client #Yellow 
+	note right: Client requests server state until game begins
+		server <- client: getServerState() server call
+		server -> client: getServerState() response
+	deactivate client
+	
+end
+group GAME_RUNNING
+	server <- client: getGameState() server call
+	note right: Client requests the initial game state object
+	server -> client: initial gameState object returned 
+	group game loop
+		== If client's turn ==
+		client -> client ++ #Green: Take turn generating gameStateUpdate object
+		
+		server <- client -- :Submit gameStateUpdate object
+		deactivate client
+		== Not client's turn == 
+		
+		server <- client :getGameStateHash() server call
+		server -> client: hash of current game state returned
+		client -> client: if hash is different, call getGameState on server
+		server <- client: getGameState() server call 
+		server -> client: current game state returned to client
+		
+	end
+end
+group GAME_OVER
+	server <- client: getServerState() server call
+	note right: Client receives server status indicating game over
+	server -> client: GAME_OVER server state returned to client
+	note right: Client receives postGameInfo containing winner name and playerID
+	server <- client: getPostGameInfo() server call
+	server -> client: post game info object returned
+	client -> client: Display winner and setup for next game
+	server -> server: Wait for a time, clear game data, change\n status back to WAITING_PLAYERS
+end
+
+@enduml

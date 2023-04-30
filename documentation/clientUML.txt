@@ -1,0 +1,180 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class client extends JFrame
+{
+	+{static} int WINDOW_WIDTH
+	+{static} int WINDOW_HEIGHT
+	+{static} int GAME_PANEL_HEIGHT
+	+{static} int GAME_PANEL_WIDTH
+	+{static} int RIGHT_PANEL_WIDTH
+	+{static} int RIGHT_PANEL_HEIGHT
+	+{static} String host
+	+{static} int port
+	+{static} int playerID
+	
+	+void registerWithServer(String playerName)
+	+void initializeRMI(String address, int port)
+	-void createRightPanel()
+	-void createGamePanel()
+
+}
+
+class StateSelectionPanel extends JPanel
+{
+	+State selectedState
+	+JLabel selectedStateName
+	+JLabel selectedState2Name
+	+JButton submitTurnButton;
+	+JButton moveUnitsButton;
+	+JSlider unitSlider;
+	
+	+void setSelectedState(State)
+	+void setSelectedState2(State)
+	+void deselect()
+	
+}
+
+class GamePanel extends JPanel
+{
+	+{static} int NUMBER_STATES
+	+{static} int frameWaitTime
+	+{static} int WAITING_PLAYERS
+	+{static} int GAME_RUNNING
+	+{static} int GAME_OVER
+	+{static} State[] states
+	-{static} BufferedImage mapImage
+	+int currentServerState
+	-Timer gameTimer
+	-{static} State selectedState
+	-{static} State selectedState2
+	
+	+void startGame()
+	+{static} void checkStateMouse(int mouseX, int mouseY)
+	+void paint(Graphics g)
+}
+
+class StatusBar
+{
+	+JLabel serverStatusLabel
+	+JLabel playerNameLabel
+	+JButton requestStartButton
+	
+	+void setStatusMessage(String input)
+	+JButton getRequestStartButton()
+}
+
+class ConnectionWindow extends JInternalFrame
+{
+	-{static} int WINDOW_WIDTH
+	-{static} int WINDOW_HEIGHT
+	-JTextField serverAddress
+	-JTextField serverPort
+	-JTextField playerName
+	-JLabel serverAddressLabel
+	-JLabel serverPortLabel
+	-JLabel playerNameLabel
+	-JButton connectButton
+	
+	-{static} ConnectionWindow getConnectionWindow()
+	
+}
+
+class WarRoomServerInterface extends Remote
+{
+	+void sendChatMessage(String message, int playerID)
+	+String[] getChats(int totalChats)
+	+void postTurn(GameStateUpdate update, int playerID)
+	+GameState getGameState(int playerID)
+	+short getGameStateHash(int playerID)
+	+int registerPlayer(String playerName)
+	+void requestGameStart(int playerID)
+	+int getServerState(int playerID)
+	+PostGameInfo getPostGameInfo()
+}
+
+class State
+{
+	+String name
+	+BufferedImage image
+	+int ownerPlayerID
+	+int stateID
+	+int color
+	+int unitCounterX
+	+int unitCounterY
+	+int unitCounterOffsetX
+	+int unitCounterOffsetY
+	-{static} Font counterFont
+	+Hashset<IntegeR> adjacentStates
+	
+	+void click()
+	+void changeColor()
+	+void setUnitOffset(int x, int y)
+	+boolean isAdjacent(State otherState)
+	+void draw(Graphics2D g2D, ImageObserver observer)
+}
+
+class GameState implements Serializable
+{
+	-{static} int NUMBER_STATES
+	+HashMap<Integer, StateData> states
+	+HashMap<Integer, Integer> playerColors
+	+short hash;
+	
+	+void updateHash(short newHash)
+	+void mergeGameStateUpdate(GameStateUpdate update)
+	
+}
+
+class StateData implements Serializable
+{
+	+int ownerPlayerID
+	+int stateID
+	+int numberUnits
+	+int color;
+	+ArrayList<Integer> adjacentStates
+}
+
+class GameStateUpdate implements Serializable
+{
+	+int playerID
+	+ArrayList<UnitMove> moveList
+	
+	+void addMove(int units, int sourceStateID, int destinationStateID, int senderPlayerID)
+	
+}
+
+class UnitMove implements Serializable
+{
+	+int sourceStateID
+	+int destinationStateID
+	+int senderPlayerID
+	+int units
+}
+
+class StateLoader
+{
+	+State[] loadStates()
+}
+
+class LoaderThread implements Runnable
+{
+	
+}	
+
+client --> StateSelectionPanel: Contains
+client --> GamePanel: Contains
+client --> ConnectionWindow: Contains
+client --> StatusBar: Contains
+client --> WarRoomServerInterface: Contains
+
+GamePanel --> State: Has many
+GamePanel --> GameState: Contains
+GamePanel --> GameStateUpdate: Contains
+
+GameState --> StateData: Has many
+
+GameStateUpdate --> UnitMove: Has many
+
+StateLoader --> LoaderThread: Has many
+@enduml
