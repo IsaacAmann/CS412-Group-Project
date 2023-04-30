@@ -168,6 +168,7 @@ public class StateLoader
 		states[14].adjacentStates.add(13);
 		states[14].adjacentStates.add(12);
 		states[14].adjacentStates.add(3);
+		states[14].adjacentStates.add(16);
 		
 		states[15].setUnitOffset(-4, -36);
 		states[15].adjacentStates.add(16);
@@ -221,6 +222,7 @@ public class StateLoader
 		states[22].adjacentStates.add(23);
 		states[22].adjacentStates.add(11);
 		states[22].adjacentStates.add(12);
+		states[22].adjacentStates.add(27);
 		
 		states[23].setUnitOffset(-6, 10);
 		states[23].adjacentStates.add(24);

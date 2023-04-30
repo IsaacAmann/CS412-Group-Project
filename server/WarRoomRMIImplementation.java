@@ -26,13 +26,14 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 	public static final int GAME_RUNNING = 2;
 	public static final int GAME_OVER = 3;
 	
-	public static final int STARTING_UNITS = 20;
+	public static final int STARTING_UNITS = 50;
+	public static final int TURN_UNIT_INCREMENT = 10;
 	public static final int MAX_PLAYERS = 8;
 	public static final int RESTART_DELAY = 5000;
 	
 	public static final int SERVER_REFRESH_RATE = 1000;
 	//Set the amount of time the server waits before kicking a player from the game 
-	public static final Duration PLAYER_TIMEOUT_LIMIT = Duration.ofSeconds(4);
+	public static final Duration PLAYER_TIMEOUT_LIMIT = Duration.ofSeconds(25);
 	//Picked some states in an order that promotes spacing between starting locations
 	public static final int[] STARTING_LOCATIONS=
 	{
@@ -168,7 +169,7 @@ public class WarRoomRMIImplementation extends UnicastRemoteObject implements War
 					GameState.StateData currentState = currentGameState.states.get(i);
 					if(currentState.ownerPlayerID != -1)
 					{
-						currentState.numberUnits += STARTING_UNITS;
+						currentState.numberUnits += TURN_UNIT_INCREMENT;
 					}
 				}
 			}

@@ -160,19 +160,21 @@ public class Client extends JFrame
 					}
 				}
 			}
-		);				
-
+		);						
 		
 		chatArea = new JTextArea();
 		chatArea.setEditable(false);
-		chatArea.setPreferredSize(new Dimension(100, 525));
+
 		chatArea.setBackground(Color.BLACK);
 		chatArea.setForeground(Color.WHITE);
+		chatArea.setLineWrap(true);
 		
-		
+		JScrollPane chatScroll = new JScrollPane(chatArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		chatScroll.setPreferredSize(new Dimension(RIGHT_PANEL_WIDTH, 350));
 		
 		rightPanel.add(stateSelectionPanel);
-		rightPanel.add(chatArea);
+		rightPanel.add(chatScroll);
+
 		rightPanel.add(chatField);
 		
 		rightPanel.setVisible(true);

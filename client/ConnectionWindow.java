@@ -26,19 +26,12 @@ public class ConnectionWindow extends JInternalFrame
 
 	public ConnectionWindow()
 	{
-	
-		
 		super("Connect to server");
 		this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
-		
-		
-		
-		
 		this.setLayout(new GridLayout(4,2));
 		this.setBackground(Color.BLACK);
 		this.setBorder(new LineBorder(Color.LIGHT_GRAY));
-	;
 		
 		//Text input fields
 		serverAddress = new JTextField();
@@ -73,14 +66,10 @@ public class ConnectionWindow extends JInternalFrame
 		serverPort.setBorder(new LineBorder(Color.BLACK));
 		playerName.setBorder(new LineBorder(Color.BLACK));
 		
-
 		serverAddress.setFont(new Font("Monospaced", Font.BOLD, 20));
 		serverPort.setFont(new Font("Monospaced", Font.BOLD, 20));
 		playerName.setFont(new Font("Monospaced", Font.BOLD, 20));
 		
-
-
-
 		//Labels for the text input fields
 		//
 		serverAddressLabel = new JLabel("-- Server Address --");
@@ -155,6 +144,8 @@ public class ConnectionWindow extends JInternalFrame
 			Client.gamePanel.startGame();
 			//Set the player name in the status bar
 			Client.statusBar.playerNameLabel.setText("Player Name: " + playerName.getText());
+			//Reset chat counter back to 0
+			Client.chatNum = 0;
 			//Close the JInternalFrame
 			getConnectionWindow().setVisible(false);
 		}
